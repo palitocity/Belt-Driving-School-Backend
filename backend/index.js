@@ -28,7 +28,9 @@ app.use(helmet());
 app.use(cors({ origin: "*" }));
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/admin/user', userRoutes);
 app.use('/api/plan', planRoutes);
 
 // Rate limit for sensitive routes

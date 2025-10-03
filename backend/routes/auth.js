@@ -17,7 +17,7 @@ console.log('SALT_ROUNDS:', SALT_ROUNDS);
 // Register
 router.post('/register', async (req, res) => {
   try {
-    
+
     const { fullname, email, password, phone } = req.body;
 
     if (!fullname || !email || !password) {
@@ -26,14 +26,14 @@ router.post('/register', async (req, res) => {
 
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) return res.status(409).json({ error: 'User already exists' });
-
-    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    const userSalt = await bcrypt.genSalt(SALT_ROUNDS);
+    const passwordHash = await bcrypt.hash(password, userSalt);
 
     const user = await User.create({ fullName: fullname, email: email.toLowerCase(), password: passwordHash, phone });
 
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
-    res.status(201).json({ message: 'User registered', user: { id: user._id, fullName: user.fullName, email: user.email , password: user.password }, token });
+    res.status(201).json({ message: 'User registered', user: { id: user._id, fullName: user.fullName, email: user.email, password: user.password }, token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -53,14 +53,16 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-        const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
- console.log('Comparing passwords:', password, user.password);
-    const valid = await bcrypt.compare(password, user.password);
-      console.log('Password valid:', valid);
-    if (!valid) {
-      return res.status(401).json({ error: 'Invalid credentials here' });
-    }
+    console.log('Comparing passwords:', password, user.password);
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    console.log('Hashed password for comparison:', passwordHash);
 
+    const valid = await bcrypt.compare(password, user.password);
+
+    console.log('Password valid:', valid);
+    if (!valid) {
+      return res.status(401).json({ error: `Invalid credentials { email: ${email} , password: ${password} }` });
+    }
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
