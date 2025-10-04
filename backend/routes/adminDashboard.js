@@ -81,14 +81,5 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ===================== GET SINGLE PLAN =====================
-router.get("/:id", async (req, res) => {
-  try {
-    const plan = await Plan.findById(req.params.id);
-    if (!plan) return res.status(404).json({ error: "Plan not found" });
-    res.json(plan);
-  } catch (err) {
-    res.status(500).json({ error: "Error retrieving plan" });
-  }
-});
+
 module.exports = router;

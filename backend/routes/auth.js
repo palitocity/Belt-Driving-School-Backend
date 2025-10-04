@@ -92,5 +92,15 @@ router.post('/login', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
+  // ===================== GET ALL PLANS =====================
+
+});router.get("/plans", async (req, res) => {
+  try {
+    const plans = await Plan.find().sort({ createdAt: -1 });
+    res.json(plans);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to retrieve plans" });
+  }
 });
+
 module.exports = router;
