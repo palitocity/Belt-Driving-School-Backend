@@ -35,18 +35,18 @@ app.use(helmet());
 // other routes 
 
 app.use('/api/plan', planRoutes);
+app.use('/api/forgot-password', forgotPasswordRoutes);
 
 //user routes 
 app.use('/api/user', userRoutes);
 app.use('/api/user/accidents', accidentRoutes);    // User accident reporting
 app.use('/api/user/transactions', userTransactionRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/forgot-password', forgotPasswordRoutes);
+
 
 // admin routes
 app.use('/api/admin/users', userRoutes);
 app.use('/api/admin/auth', adminAuthRoutes);
-app.use('/api/forgot-password', forgotPasswordRoutes);
 app.use('/api/admin/dashboard', adminDashboardRoutes);
 app.use('/api/admin/accidents', adminAccidentRoutes); // Admin accident dashboard
 
