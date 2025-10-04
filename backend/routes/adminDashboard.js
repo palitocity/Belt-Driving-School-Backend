@@ -67,7 +67,7 @@ router.post("/add", adminOnly, async (req, res) => {
     res.status(201).json({ message: "Plan created successfully", plan: newPlan });
   } catch (err) {
     console.error("Error creating plan:", err);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: `Error creating plan: ${err.message}` });
   }
 });
 
