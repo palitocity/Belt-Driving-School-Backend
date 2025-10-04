@@ -6,16 +6,16 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 
-const authRoutes = require('../backend/routes/auth');
-const userRoutes = require('../backend/routes/user');
-const planRoutes = require('../backend/routes/plan');
+const authRoutes = require('./backend/routes/auth');
+const userRoutes = require('./backend/routes/user');
+const planRoutes = require('./backend/routes/plan');
 const app = express();
 const PORT = process.env.PORT || 4000;
-const adminAuthRoutes = require('../backend/routes/adminAuth');
-const adminDashboardRoutes = require('../backend/routes/adminDashboard');
+const adminAuthRoutes = require('./backend/routes/adminAuth');
+const adminDashboardRoutes = require('./backend/routes/adminDashboard');
 
-const accidentRoutes = require('../backend/routes/accident');
-const adminAccidentRoutes = require('../backend/routes/adminAccidents');
+const accidentRoutes = require('./backend/routes/accident');
+const adminAccidentRoutes = require('./backend/routes/adminAccidents');
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 // Middleware
