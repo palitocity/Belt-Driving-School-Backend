@@ -30,8 +30,6 @@ app.use(helmet());
 
 // Routes
 
-
-
 // other routes 
 
 app.use('/api/plan', planRoutes);
