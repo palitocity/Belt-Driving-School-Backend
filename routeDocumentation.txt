@@ -220,7 +220,140 @@ Authorization: Bearer <token>
 }
 ```
 
+
+
+These routes handle the **password recovery process** for both users and administrators.
+They include generating a **secure password reset token** and submitting a **new password** through a verified link.
+
+> **Note:**
+>
+> * Reset links are valid for **15 minutes**.
+> * Both **users** and **admins** can initiate password resets.
+> * Tokens are **JWT-based** and securely signed with the server’s secret key.
+
 ---
+
+## 🔹 1. Request Password Reset (Forgot Password)
+
+**Endpoint:**
+
+```
+POST https://belt-driving-school-backend-3.onrender.com/api/auth/forgot-password
+```
+
+**Description:**
+Generates a temporary **password reset link** and sends it to the user’s or admin’s email address.
+The link contains a secure token valid for **15 minutes**.
+
+**Request Body:**
+
+```json
+{
+  "email": "Sheema@gmail.com",
+  "role": "user"
+}
+```
+
+| Field | Type   | Required | Description                                   |
+| ----- | ------ | -------- | --------------------------------------------- |
+| email | string | ✅ Yes    | The email address associated with the account |
+| role  | string | ✅ Yes    | Either `"user"` or `"admin"`                  |
+
+**Successful Response (200 OK):**
+
+```json
+{
+  "message": "Password reset link generated",
+  "resetUrl": "http://localhost:3000/reset-password?token=eyJhbGciOi...&role=user"
+}
+```
+
+**Error Responses:**
+
+| Code | Message                       |
+| ---- | ----------------------------- |
+| 400  | `Email and role are required` |
+| 404  | `Account not found`           |
+| 500  | `Internal server error`       |
+
+**Notes:**
+
+* The backend generates a JWT-based token and stores it in the database with a 15-minute expiry time.
+* The token should be sent via email (email-sending logic can be integrated later using **Nodemailer** or any SMTP service).
+
+---
+
+## 🔹 2. Reset Password
+
+**Endpoint:**
+
+```
+POST https://belt-driving-school-backend-3.onrender.com/api/auth/reset-password
+```
+
+**Description:**
+Resets the password of a verified user or admin using a valid **reset token**.
+Once successful, the token is invalidated to prevent reuse.
+
+**Request Body:**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "newPassword": "NewStrongPassword123!",
+  "role": "user"
+}
+```
+
+| Field       | Type   | Required | Description                                       |
+| ----------- | ------ | -------- | ------------------------------------------------- |
+| token       | string | ✅ Yes    | JWT reset token generated from `/forgot-password` |
+| newPassword | string | ✅ Yes    | The new password to set                           |
+| role        | string | ✅ Yes    | Either `"user"` or `"admin"`                      |
+
+**Successful Response (200 OK):**
+
+```json
+{
+  "message": "Password reset successful"
+}
+```
+
+**Error Responses:**
+
+| Code | Message                              |
+| ---- | ------------------------------------ |
+| 400  | `Invalid or expired token`           |
+| 400  | `Token, password, and role required` |
+| 500  | `Internal server error`              |
+
+**Notes:**
+
+* Once the password is successfully changed:
+
+  * The reset token and expiration fields are cleared.
+  * The new password is hashed using **bcrypt** before saving.
+* Tokens automatically expire after **15 minutes**.
+
+---
+
+## ⚙️ Technical Flow
+
+| Step | Action                       | Description                                                              |
+| ---- | ---------------------------- | ------------------------------------------------------------------------ |
+| 1    | User requests password reset | `/forgot-password` generates a secure JWT and stores it in the DB.       |
+| 2    | Email sent                   | The user receives a link containing the token and role parameters.       |
+| 3    | User submits new password    | `/reset-password` validates the token and updates the password securely. |
+
+---
+
+## 🔒 Summary
+
+| Action                 | Method | Endpoint                    | Auth Required |
+| ---------------------- | ------ | --------------------------- | ------------- |
+| Request password reset | `POST` | `/api/auth/forgot-password` | ❌ No          |
+| Reset password         | `POST` | `/api/auth/reset-password`  | ❌ No          |
+
 
 ## ⚙️ Summary
 
