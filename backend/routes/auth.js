@@ -17,10 +17,10 @@ console.log('SALT_ROUNDS:', SALT_ROUNDS);
 router.post('/register', async (req, res) => {
   try {
 
-    const { fullname, email, password, phone } = req.body;
+    const { fullname, email, password, phone, role } = req.body;
 
-    if (!fullname || !email || !password) {
-      return res.status(400).json({ error: 'fullname, email, and password are required' });
+    if (!fullname || !email || !password || !role) {
+      return res.status(400).json({ error: 'fullname, email, password, and role are required' });
     }
 
     const existing = await User.findOne({ email: email.toLowerCase() });
@@ -33,8 +33,9 @@ router.post('/register', async (req, res) => {
       { 
         fullName: fullname,
          email: email.toLowerCase(),
-          password: passwordHash, 
-          phone ,
+          password: passwordHash,
+          role,
+          phone,
           emailToken,
       emailTokenExpiry: Date.now() + 10 * 60 * 1000, // 10 minutes
     });
