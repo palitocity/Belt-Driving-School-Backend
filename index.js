@@ -66,7 +66,7 @@ app.use("/api/user/transactions", userTransactionRoutes);
 app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin/dashboard", adminDashboardRoutes);
 app.use("/api/admin/accidents", adminAccidentRoutes);
-app.use("/api/admin/users", userRoutes); // Optional: you may separate admin user management later
+ // Optional: you may separate admin user management later
 
 // ======================
 //  Health Check Endpoint

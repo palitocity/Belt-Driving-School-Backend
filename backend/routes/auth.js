@@ -85,7 +85,7 @@ router.post('/login', async (req, res) => {
 
     res.json({
       message: 'Authenticated',
-      user: { id: user._id, fullName: user.fullName, email: user.email },
+      user: { id: user._id, fullName: user.fullName, email: user.email, role: user.role },
       token
     });
   } catch (err) {
