@@ -4,6 +4,8 @@ const Order = require('../models/Order');
 const HireDriver = require('../models/HireDriver'); // new schema for hiring requests
 const adminOnly = require('../middleware/admin');
 const Plan = require('../models/plan');
+const Team = require('../models/team');
+const { route } = require('./auth');
 
 const router = express.Router();
 
@@ -82,5 +84,96 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.put("/update/:id", adminOnly, async (req, res) => {
+  try {
+    const planId = req.params.id;
+    const { name, price, duration, description, features, highlight } = req.body; 
+
+    const updatedPlan = await Plan.findByIdAndUpdate(planId, { name, price, duration, description, features, highlight }, { new: true });
+    if (!updatedPlan) {
+      return res.status(404).json({ error: "Plan not found" });
+    }
+    res.json({ message: "Plan updated successfully", plan: updatedPlan });
+  } catch (err) {
+    console.error("Error updating plan:", err);
+    res.status(500).json({ error: `Error updating plan: ${err.message}` });
+  }
+});
+
+router.delete("/delete/:id", adminOnly, async (req, res) => {
+  try {
+    const planId = req.params.id;
+    const deletedPlan = await Plan.findByIdAndDelete(planId);
+    if (!deletedPlan) {
+      return res.status(404).json({ error: "Plan not found" });
+    } 
+    res.json({ message: "Plan deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting plan:", err);
+    res.status(500).json({ error: `Error deleting plan: ${err.message}` });
+  }
+});
+
+// ===================== GET ALL Team =====================
+router.get("/team/all", async (req, res) => {
+  try {
+    const team = await Team.find().sort({ createdAt: -1 });
+    res.json(team);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to retrieve team" });
+  }
+});
+router.post("/team/add", adminOnly, async (req, res) => {
+  try {
+    const { name,role,image,bio } = req.body;
+
+    if (!name || !role || !image || !bio ) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const newTeam = new Team({
+     name,
+     role,
+     image,
+     bio,
+      createdBy: req.adminId
+    });
+
+    await newTeam.save();
+    res.status(201).json({ message: "Team created successfully", Team: newTeam });
+  } catch (err) {
+    console.error("Error creating Team:", err);
+    res.status(500).json({ error: `Error creating Team: ${err.message}` });
+  }
+});
+
+router.delete("/delete/:id", adminOnly, async (req, res) => {
+  try {
+    const teamId = req.params.id;
+    const deletedTeam = await Team.findByIdAndDelete(teamId);
+    if (!deletedTeam) {
+      return res.status(404).json({ error: "Team not found" });
+    } 
+    res.json({ message: "Team deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting Team:", err);
+    res.status(500).json({ error: `Error deleting Team: ${err.message}` });
+  }
+});
+router.put("/team/update/:id", adminOnly, async (req, res) => {
+  try {
+    const teamId = req.params.id;
+    const { name, role, image, bio } = req.body; 
+
+    const updatedTeam = await Team.findByIdAndUpdate(teamId, { name, role, image, bio }, { new: true });
+    if (!updatedTeam) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+    res.json({ message: "Team updated successfully", Team: updatedTeam });
+  } catch (err) {
+    console.error("Error updating Team:", err);
+    res.status(500).json({ error: `Error updating Team: ${err.message}` });
+  }
+});
 
 module.exports = router;
