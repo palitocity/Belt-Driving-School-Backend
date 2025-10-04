@@ -10,7 +10,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
 
 // RESEND EMAIL CONFIRMATION
-router.post("/resend-confirmation", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { email } = req.body;
 

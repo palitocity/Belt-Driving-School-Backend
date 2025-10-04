@@ -27,6 +27,7 @@ const userTransactionRoutes = require("./backend/routes/userTransaction");
 const adminAuthRoutes = require("./backend/routes/adminAuth");
 const adminDashboardRoutes = require("./backend/routes/adminDashboard");
 const adminAccidentRoutes = require("./backend/routes/adminAccidents");
+const resendEmailConfirmationRoutes = require("./backend/routes/resendEmailConfirmation");
 
 // ======================
 //  Middleware Setup
@@ -53,6 +54,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/auth/confirm-email", confirmEmailRoutes);
 app.use("/api/plan", planRoutes);
 app.use("/api/forgot-password", forgotPasswordRoutes);
+app.use("/api/auth/resend-confirmation", resendEmailConfirmationRoutes);
 
 
 // User Routes
