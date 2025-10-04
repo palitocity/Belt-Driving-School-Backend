@@ -143,6 +143,47 @@ Authorization: Bearer <token>
 
 ---
 
+
+
+## 🔹 4. Retrieve User Transaction
+
+**Endpoint:**
+
+```
+GET https://belt-driving-school-backend-3.onrender.com/api/user/transactions
+```
+
+**Description:**
+Fetches the authenticated user’s transaction details using their JWT token.
+
+**Headers:**
+
+```
+Authorization: Bearer <token>
+```
+
+**Successful Response (200 OK):**
+
+```json
+{
+  "id": "68e0f177d99d3dc2b79af118",
+  "fullName": "Sheema",
+  "email": "sheema@gmail.com",
+  "role": "user",
+  "phone": "+234904034567"
+}
+```
+
+**Error Response (401 Unauthorized):**
+
+```json
+{
+  "message": "Token expired or invalid"
+}
+```
+
+---
+
 ## ⚙️ Summary
 
 | Action             | Method | Endpoint             | Auth Required |

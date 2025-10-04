@@ -13,6 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const adminAuthRoutes = require('./backend/routes/adminAuth');
 const adminDashboardRoutes = require('./backend/routes/adminDashboard');
+const userTransactionRoutes = require('./backend/routes/userTransaction');
 
 const accidentRoutes = require('./backend/routes/accident');
 const adminAccidentRoutes = require('./backend/routes/adminAccidents');
@@ -27,6 +28,7 @@ app.use(helmet());
 // CORS
 app.use(cors({ origin: "*" }));
 // Routes
+app.use('/api/user/transactions', userTransactionRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/user', userRoutes);
