@@ -13,7 +13,6 @@ console.log('JWT_EXPIRES_IN:', JWT_EXPIRES_IN);
 console.log('SALT_ROUNDS:', SALT_ROUNDS);
 
 
-
 // Register
 router.post('/register', async (req, res) => {
   try {
@@ -29,8 +28,16 @@ router.post('/register', async (req, res) => {
     const userSalt = await bcrypt.genSalt(SALT_ROUNDS);
     const passwordHash = await bcrypt.hash(password, userSalt);
     console.log('Password hash:', passwordHash, 'using salt:', userSalt, 'for password:', password);
-
-    const user = await User.create({ fullName: fullname, email: email.toLowerCase(), password: passwordHash, phone });
+    const emailToken = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+    const user = await User.create(
+      { 
+        fullName: fullname,
+         email: email.toLowerCase(),
+          password: passwordHash, 
+          phone ,
+          emailToken,
+      emailTokenExpiry: Date.now() + 10 * 60 * 1000, // 10 minutes
+    });
     user.save();
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
@@ -40,6 +47,37 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+// CONFIRM EMAIL
+router.post("/confirm-email", async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (user.isVerified)
+      return res.status(400).json({ error: "Email already verified" });
+
+    if (
+      user.emailToken !== code ||
+      user.emailTokenExpiry < Date.now()
+    ) {
+      return res.status(400).json({ error: "Invalid or expired verification code" });
+    }
+
+    user.isVerified = true;
+    user.emailToken = undefined;
+    user.emailTokenExpiry = undefined;
+    await user.save();
+
+    res.json({ message: "Email successfully verified! You can now log in." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 // Login
 router.post('/login', async (req, res) => {
@@ -54,6 +92,9 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+     if (!user.isVerified)
+    return res.status(401).json({ error: "Please verify your email before logging in." });
+  
     console.log('Comparing passwords:', password, user.password);
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     console.log('Hashed password for comparison:', passwordHash);

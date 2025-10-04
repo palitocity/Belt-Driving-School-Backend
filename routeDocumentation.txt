@@ -62,8 +62,42 @@ Creates a new user account in the system.
 * The `role` field currently accepts `"user"` or `"admin"` depending on user privileges.
 
 ---
+## 🔹 1. Confirm email
 
-## 🔹 2. User Login
+**Endpoint:**
+
+```
+POST https://belt-driving-school-backend-3.onrender.com/api/auth/confirm-email
+```
+
+**Description:**
+Confirms registration email account in the system.
+
+**Request Body:**
+
+```json
+{
+  "email": "Sheema@gmail.com",
+  "code": "292923"
+}
+```
+
+**Successful Response (200 OK):**
+
+```json
+{
+   message: "Email successfully verified! You can now log in."
+}
+```
+
+**Notes:**
+
+* The `token` should be stored securely on the client side for authentication.
+* The `role` field currently accepts `"user"` or `"admin"` depending on user privileges.
+
+---
+
+## 🔹 3. User Login
 
 **Endpoint:**
 
@@ -82,6 +116,10 @@ Authenticates an existing user and issues a new JWT token valid for one hour.
   "password": "SamplePassword1233"
 }
 ```
+** not verified ** 
+json 
+
+  { error: "Please verify your email before logging in." }
 
 **Successful Response (200 OK):**
 
@@ -104,7 +142,7 @@ Authenticates an existing user and issues a new JWT token valid for one hour.
 
 ---
 
-## 🔹 3. Retrieve User Information
+## 🔹 4. Retrieve User Information
 
 **Endpoint:**
 
