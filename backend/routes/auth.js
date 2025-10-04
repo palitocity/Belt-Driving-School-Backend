@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
       emailTokenExpiry: Date.now() + 10 * 60 * 1000, // 10 minutes
     });
     user.save();
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const token = jwt.sign({ id: user._id, email: user.email ,role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     res.status(201).json({ message: 'User registered', user: { id: user._id, fullName: user.fullName, email: user.email }, token });
   } catch (err) {
@@ -78,7 +78,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: `Invalid credentials` });
     }
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
     );
