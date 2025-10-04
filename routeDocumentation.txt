@@ -1,0 +1,156 @@
+Excellent — here’s your **route documentation rewritten professionally**, with consistent formatting, clear explanations, and a structure suitable for a technical document or API reference.
+
+---
+
+# 🚗 Belt Driving School API – User Routes Documentation
+
+## Overview
+
+The following routes handle **user authentication and profile management** within the Belt Driving School system.
+
+> **Note:**
+>
+> * All issued JWT tokens expire **1 hour** after generation.
+> * Ensure each protected route request includes the token in the `Authorization` header as:
+>
+>   ```
+>   Authorization: Bearer <token>
+>   ```
+
+---
+
+## 🔹 1. Register a New User
+
+**Endpoint:**
+
+```
+POST https://belt-driving-school-backend-3.onrender.com/api/auth/register
+```
+
+**Description:**
+Creates a new user account in the system.
+
+**Request Body:**
+
+```json
+{
+  "fullname": "Sheema",
+  "email": "Sheema@gmail.com",
+  "password": "SamplePassword1233",
+  "phone": "+234904034567",
+  "role": "user"
+}
+```
+
+**Successful Response (200 OK):**
+
+```json
+{
+  "message": "User registered",
+  "user": {
+    "id": "68e0f177d99d3dc2b79af118",
+    "fullName": "Sheema",
+    "email": "sheema@gmail.com"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Notes:**
+
+* The `token` should be stored securely on the client side for authentication.
+* The `role` field currently accepts `"user"` or `"admin"` depending on user privileges.
+
+---
+
+## 🔹 2. User Login
+
+**Endpoint:**
+
+```
+POST https://belt-driving-school-backend-3.onrender.com/api/auth/login
+```
+
+**Description:**
+Authenticates an existing user and issues a new JWT token valid for one hour.
+
+**Request Body:**
+
+```json
+{
+  "email": "Sheema@gmail.com",
+  "password": "SamplePassword1233"
+}
+```
+
+**Successful Response (200 OK):**
+
+```json
+{
+  "message": "Authenticated",
+  "user": {
+    "id": "68e0f177d99d3dc2b79af118",
+    "fullName": "Sheema",
+    "email": "sheema@gmail.com"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Notes:**
+
+* If credentials are invalid, the API returns an authentication error (HTTP 401).
+* Tokens from this route must be used to access protected endpoints.
+
+---
+
+## 🔹 3. Retrieve User Information
+
+**Endpoint:**
+
+```
+GET https://belt-driving-school-backend-3.onrender.com/api/user/me
+```
+
+**Description:**
+Fetches the authenticated user’s profile details using their JWT token.
+
+**Headers:**
+
+```
+Authorization: Bearer <token>
+```
+
+**Successful Response (200 OK):**
+
+```json
+{
+  "id": "68e0f177d99d3dc2b79af118",
+  "fullName": "Sheema",
+  "email": "sheema@gmail.com",
+  "role": "user",
+  "phone": "+234904034567"
+}
+```
+
+**Error Response (401 Unauthorized):**
+
+```json
+{
+  "message": "Token expired or invalid"
+}
+```
+
+---
+
+## ⚙️ Summary
+
+| Action             | Method | Endpoint             | Auth Required |
+| ------------------ | ------ | -------------------- | ------------- |
+| Register new user  | `POST` | `/api/auth/register` | ❌ No          |
+| Login              | `POST` | `/api/auth/login`    | ❌ No          |
+| Retrieve user info | `GET`  | `/api/user/me`       | ✅ Yes         |
+
+---
+
+Would you like me to format this in **Markdown for GitHub**, or as a **technical API reference document (PDF or DOCX)** you can share with your development team or clients?
