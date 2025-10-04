@@ -66,6 +66,7 @@ router.post('/login', async (req, res) => {
     }
      if (!user.isVerified)
     return res.status(401).json({ error: "Please verify your email before logging in." });
+  
     console.log('Comparing passwords:', password, user.password);
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     console.log('Hashed password for comparison:', passwordHash);

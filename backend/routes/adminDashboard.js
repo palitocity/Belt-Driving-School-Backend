@@ -28,10 +28,12 @@ router.get('/hire-requests', adminOnly, async (req, res) => {
 router.get('/stats', adminOnly, async (req, res) => {
   const totalUsers = await User.countDocuments({ role: 'user' });
   const totalAdmins = await User.countDocuments({ role: 'admin' });
+  const totalStudents = await User.countDocuments({ role: 'student' });
+  const totalInstructors = await User.countDocuments({ role: 'instructor' });
   const totalOrders = await Order.countDocuments();
   const paidOrders = await Order.countDocuments({ status: 'paid' });
 
-  res.json({ totalUsers, totalAdmins, totalOrders, paidOrders });
+  res.json({ totalUsers, totalAdmins, totalStudents, totalInstructors, totalOrders, paidOrders });
 });
 
 module.exports = router;
