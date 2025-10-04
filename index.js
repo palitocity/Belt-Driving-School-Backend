@@ -21,7 +21,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 // Middleware
 // app.use(cors());
-app.use(cors({ origin: "*" }));
+app.use(cors());
 app.use(express.json());
 // Security headers
 app.use(helmet());
@@ -29,12 +29,27 @@ app.use(helmet());
 // CORS
 
 // Routes
+
+
+
+// other routes 
+
+app.use('/api/plan', planRoutes);
+
+//user routes 
+app.use('/api/user', userRoutes);
+app.use('/api/accidents', accidentRoutes);    // User accident reporting
 app.use('/api/user/transactions', userTransactionRoutes);
 app.use('/api/auth', authRoutes);
+
+
+// admin routes
+app.use('/api/admin/users', userRoutes);
 app.use('/api/admin/auth', adminAuthRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/admin/user', userRoutes);
-app.use('/api/plan', planRoutes);
+app.use('/api/admin/dashboard', adminDashboardRoutes);   
+app.use('/api/admin/accidents', adminAccidentRoutes); // Admin accident dashboard
+
+
 
 // Rate limit for sensitive routes
 const limiter = rateLimit({
@@ -42,25 +57,17 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests
 });
 
-// app.use("/api/auth", limiter);
-// // // Catch-all for unknown routes
-// app.use((req, res, next) => {
-//   res.status(404).json({ error: "Route not found" });
-// });
+app.use("/api/auth", limiter);
+// // Catch-all for unknown routes
+app.use((req, res, next) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
 // Central error handler
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
   res.status(500).json({ error: "Something went wrong on the server" });
 });
-
-
-
-
-app.use('/api/admin/auth', adminAuthRoutes);
-app.use('/api/admin/dashboard', adminDashboardRoutes);
-app.use('/api/accidents', accidentRoutes);          // User accident reporting
-app.use('/api/admin/accidents', adminAccidentRoutes); // Admin accident dashboard
 
 
 
