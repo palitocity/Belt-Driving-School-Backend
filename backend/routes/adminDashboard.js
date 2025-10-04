@@ -3,6 +3,7 @@ const User = require('../models/user');
 const Order = require('../models/Order');
 const HireDriver = require('../models/HireDriver'); // new schema for hiring requests
 const adminOnly = require('../middleware/admin');
+const Plan = require('../models/plan');
 
 const router = express.Router();
 
