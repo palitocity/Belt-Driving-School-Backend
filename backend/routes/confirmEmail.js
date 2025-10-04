@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const {authenticateToken} = require('../middleware/auth');
 const router = express.Router();
 
 const confirmEmail = express.Router();
@@ -10,7 +11,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
 
 // CONFIRM EMAIL
-router.post("/confirm-email", async (req, res) => {
+router.post("/confirm-email", authenticateToken, async (req, res) => {
   try {
     const { email, code } = req.body;
 
