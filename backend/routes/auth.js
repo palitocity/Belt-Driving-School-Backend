@@ -48,35 +48,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// CONFIRM EMAIL
-router.post("/confirm-email", async (req, res) => {
-  try {
-    const { email, code } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    if (user.isVerified)
-      return res.status(400).json({ error: "Email already verified" });
-
-    if (
-      user.emailToken !== code ||
-      user.emailTokenExpiry < Date.now()
-    ) {
-      return res.status(400).json({ error: "Invalid or expired verification code" });
-    }
-
-    user.isVerified = true;
-    user.emailToken = undefined;
-    user.emailTokenExpiry = undefined;
-    await user.save();
-
-    res.json({ message: "Email successfully verified! You can now log in." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
 
 
 // Login
@@ -94,7 +65,6 @@ router.post('/login', async (req, res) => {
     }
      if (!user.isVerified)
     return res.status(401).json({ error: "Please verify your email before logging in." });
-  
     console.log('Comparing passwords:', password, user.password);
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     console.log('Hashed password for comparison:', passwordHash);
