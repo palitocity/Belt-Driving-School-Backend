@@ -22,6 +22,7 @@ router.post("/", authenticateToken, async (req, res) => {
 
     user.emailToken = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
     user.emailTokenExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+    
     await user.save();
 
     // TODO: Send email with confirmation link (including user.emailToken)
