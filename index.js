@@ -20,13 +20,14 @@ const adminAccidentRoutes = require('./backend/routes/adminAccidents');
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 // Middleware
-app.use(cors());
+// app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 // Security headers
 app.use(helmet());
 
 // CORS
-app.use(cors({ origin: "*" }));
+
 // Routes
 app.use('/api/user/transactions', userTransactionRoutes);
 app.use('/api/auth', authRoutes);
