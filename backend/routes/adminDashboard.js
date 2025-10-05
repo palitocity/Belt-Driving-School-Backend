@@ -118,8 +118,11 @@ router.delete("/delete/:id", adminOnly, async (req, res) => {
 
 router.post("/team/add", adminOnly, async (req, res) => {
   try {
-    const {  role, image, bio } = req.body;
+
     const name = req.body.name || "Unnamed"; // Default name if not provided
+    const role = req.body.role || "No Role"; // Default role if not provided
+    const image = req.body.image || "/images/default.jpg";  // Default image path if not provided
+    const bio = req.body.bio || "No bio available."; // Default bio if not provided
 
     if (!name || !role || !image || !bio) {
       return res.status(400).json({ error: "All fields are required" });
