@@ -19,7 +19,7 @@ router.use(express.json({ limit: "10mb" }));
 // Upload route
 router.post("/teams/upload", adminOnly, (req, res) => {
   try {
-    const { image } = req.body;
+    const image  = req.body.image;
 
     if (!image) {
       return res.status(400).json({ message: "No image provided" });
