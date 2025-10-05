@@ -6,59 +6,63 @@ const adminOnly = require('../middleware/admin');
 const Plan = require('../models/plan');
 const Team = require('../models/team');
 const { route } = require('./auth');
-const { fileURLToPath } = require('url');
+const { imageURLToPath } = require('url');
 const fs = require('fs');
 const path = require('path');
 
 
-const filename = fileURLToPath.name;
-const dirname = path.dirname(filename);
+
 const router = express.Router();
 router.use(express.json({ limit: "10mb" }));
-// Fix __dirname for ES modules
+const uploadsDir = path.join(__dirname, 'teams');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 // Upload route
 router.post("/teams/upload", adminOnly, (req, res) => {
-  try {
-    // const image  = req.body.image;
-    // console.log('Request body:', req.body);
-    res.status(200).json({ message: `testing what is coming ${req.body.image}` });
+   try {
+      const { image } = req.body; // expecting { "image": "data:..." }
 
     if (!image) {
       return res.status(400).json({ message: "No image provided" });
     }
 
-    // Remove Base64 header and convert to binary
-    const base64Data = image.replace(/^data:image\/\w+;base64,/, "") || image;
-
-    const buffer = Buffer.from(base64Data, "base64");
-    console.log('Buffer length:', buffer.length);
-
-    // Create unique file name
-    const fileName = `${Date.now()}.png`;
-    const filePath = path.join(dirname, "teams", fileName);
-
-    // Make sure teams folder exists
-    if (!fs.existsSync(path.join(dirname, "teams"))) {
-      fs.mkdirSync(path.join(dirname, "teams"));
+    // Extract image type (e.g., image/png or application/pdf)
+    const match = image.match(/^data:(.+);base64,(.*)$/);
+    if (!match) {
+      return res.status(400).json({ message: "Invalid Base64 format" });
     }
 
-    // Save file
-    fs.writeFileSync(filePath, buffer);
+    const mimeType = match[1];
+    const base64Data = match[2];
+    const buffer = Buffer.from(base64Data, "base64");
 
-    // Return public path
-    const publicPath = `/teams/${fileName}`;
-    res.status(201).json({
-      message: "Image uploaded successfully",
-      path: publicPath, // relative path
+    // Determine image extension
+    const extension = mimeType.split("/")[1];
+    const imageName = `${Date.now()}.${extension}`;
+    const imagePath = path.join(uploadsDir, imageName);
+
+    // Save the image
+    fs.writeFileSync(imagePath, buffer);
+
+    // Return public image path
+    const publicPath = `/uploads/${imageName}`;
+    const fullUrl = `http://localhost:5000${publicPath}`;
+
+    return res.json({
+      message: "image uploaded successfully",
+      imageName,
+      path: publicPath,
+      url: fullUrl,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: `Error uploading image: ${error.message}` });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error saving image" });
   }
 });
 
 // Serve the teams folder publicly
-router.use("/teams/uploads", express.static(path.join(dirname, "teams")));
+router.use("/teams/uploads", express.static(path.join(__dirname, "teams")));
 // Get all users
 router.get('/users', adminOnly, async (req, res) => {
   const users = await User.find({ role: 'user' }).select('-password');
