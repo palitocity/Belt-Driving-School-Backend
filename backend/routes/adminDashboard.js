@@ -6,15 +6,15 @@ const adminOnly = require('../middleware/admin');
 const Plan = require('../models/plan');
 const Team = require('../models/team');
 const { route } = require('./auth');
-const  { fileURLToPath } = require('url');
-const  fs = require('fs');
+const { fileURLToPath } = require('url');
+const fs = require('fs');
 const path = require('path');
 
 
 const filename = fileURLToPath.name;
 const dirname = path.dirname(filename);
 const router = express.Router();
-router.use("/upload-binary", express.raw({ type: "routerlication/octet-stream", limit: "10mb" }));
+router.use(express.json({ limit: "10mb" }));
 // Fix __dirname for ES modules
 // Upload route
 router.post("/teams/upload", adminOnly, (req, res) => {
@@ -27,7 +27,9 @@ router.post("/teams/upload", adminOnly, (req, res) => {
 
     // Remove Base64 header and convert to binary
     const base64Data = image.replace(/^data:image\/\w+;base64,/, "") || image;
+
     const buffer = Buffer.from(base64Data, "base64");
+    console.log('Buffer length:', buffer.length);
 
     // Create unique file name
     const fileName = `${Date.now()}.png`;
@@ -49,7 +51,7 @@ router.post("/teams/upload", adminOnly, (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error uploading image" });
+    res.status(500).json({ message: `Error uploading image: ${error.message}` });
   }
 });
 
@@ -133,7 +135,7 @@ router.get("/", async (req, res) => {
 router.put("/update/:id", adminOnly, async (req, res) => {
   try {
     const planId = req.params.id;
-    const { name, price, duration, description, features, highlight } = req.body; 
+    const { name, price, duration, description, features, highlight } = req.body;
 
     const updatedPlan = await Plan.findByIdAndUpdate(planId, { name, price, duration, description, features, highlight }, { new: true });
     if (!updatedPlan) {
@@ -152,7 +154,7 @@ router.delete("/delete/:id", adminOnly, async (req, res) => {
     const deletedPlan = await Plan.findByIdAndDelete(planId);
     if (!deletedPlan) {
       return res.status(404).json({ error: "Plan not found" });
-    } 
+    }
     res.json({ message: "Plan deleted successfully" });
   } catch (err) {
     console.error("Error deleting plan:", err);
@@ -175,10 +177,10 @@ router.post("/team/add", adminOnly, async (req, res) => {
     }
 
     const newTeam = new Team({
-     name,
-     role,
-     image,
-     bio,
+      name,
+      role,
+      image,
+      bio,
       createdBy: req.adminId
     });
 
@@ -196,7 +198,7 @@ router.delete("/team/delete/:id", adminOnly, async (req, res) => {
     const deletedTeam = await Team.findByIdAndDelete(teamId);
     if (!deletedTeam) {
       return res.status(404).json({ error: "Team not found" });
-    } 
+    }
     res.json({ message: "Team deleted successfully" });
   } catch (err) {
     console.error("Error deleting Team:", err);
@@ -206,7 +208,7 @@ router.delete("/team/delete/:id", adminOnly, async (req, res) => {
 router.put("/team/update/:id", adminOnly, async (req, res) => {
   try {
     const teamId = req.params.id;
-    const { name, role, image, bio } = req.body; 
+    const { name, role, image, bio } = req.body;
 
     const updatedTeam = await Team.findByIdAndUpdate(teamId, { name, role, image, bio }, { new: true });
     if (!updatedTeam) {
