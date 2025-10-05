@@ -21,7 +21,7 @@ router.post("/teams/upload", adminOnly, (req, res) => {
   try {
     // const image  = req.body.image;
     // console.log('Request body:', req.body);
-    res.status(200).json({ message: `testing what is coming ${req.body}` });
+    res.status(200).json({ message: `testing what is coming ${req.body.image}` });
 
     if (!image) {
       return res.status(400).json({ message: "No image provided" });
