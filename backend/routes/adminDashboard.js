@@ -6,18 +6,18 @@ const adminOnly = require('../middleware/admin');
 const Plan = require('../models/plan');
 const Team = require('../models/team');
 const { route } = require('./auth');
-import { fileURLToPath } from "url";
-import fs from 'fs';
-import path from 'path';
+const  { fileURLToPath } = require('url');
+const  fs = require('fs');
+const path = require('path');
 
-app.use("/upload-binary", express.raw({ type: "application/octet-stream", limit: "10mb" }));
-// Fix __dirname for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+const filename = fileURLToPath.name;
+const dirname = path.dirname(filename);
 const router = express.Router();
-
+router.use("/upload-binary", express.raw({ type: "routerlication/octet-stream", limit: "10mb" }));
+// Fix __dirname for ES modules
 // Upload route
-app.post("/teams/upload", adminOnly, (req, res) => {
+router.post("/teams/upload", adminOnly, (req, res) => {
   try {
     const { image } = req.body;
 
@@ -31,11 +31,11 @@ app.post("/teams/upload", adminOnly, (req, res) => {
 
     // Create unique file name
     const fileName = `${Date.now()}.png`;
-    const filePath = path.join(__dirname, "teams", fileName);
+    const filePath = path.join(dirname, "teams", fileName);
 
     // Make sure teams folder exists
-    if (!fs.existsSync(path.join(__dirname, "teams"))) {
-      fs.mkdirSync(path.join(__dirname, "teams"));
+    if (!fs.existsSync(path.join(dirname, "teams"))) {
+      fs.mkdirSync(path.join(dirname, "teams"));
     }
 
     // Save file
@@ -54,7 +54,7 @@ app.post("/teams/upload", adminOnly, (req, res) => {
 });
 
 // Serve the teams folder publicly
-app.use("/teams/uploads", express.static(path.join(__dirname, "teams")));
+router.use("/teams/uploads", express.static(path.join(dirname, "teams")));
 // Get all users
 router.get('/users', adminOnly, async (req, res) => {
   const users = await User.find({ role: 'user' }).select('-password');
