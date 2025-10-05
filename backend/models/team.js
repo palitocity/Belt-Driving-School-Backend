@@ -6,9 +6,9 @@ const mongoose = require('mongoose');
 
 const TeamSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  role: { type: Number, required: true },
-  image: { type: String },
-  bio: { type: String },
+  role: { type: String, required: true },
+  image: { type: String, required: true },
+  bio: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 

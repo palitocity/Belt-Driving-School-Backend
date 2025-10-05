@@ -115,19 +115,13 @@ router.delete("/delete/:id", adminOnly, async (req, res) => {
 });
 
 // ===================== GET ALL Team =====================
-router.get("/team/all", async (req, res) => {
-  try {
-    const team = await Team.find().sort({ createdAt: -1 });
-    res.json(team);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to retrieve team" });
-  }
-});
+
 router.post("/team/add", adminOnly, async (req, res) => {
   try {
-    const { name,role,image,bio } = req.body;
+    const {  role, image, bio } = req.body;
+    const name = req.body.name || "Unnamed"; // Default name if not provided
 
-    if (!name || !role || !image || !bio ) {
+    if (!name || !role || !image || !bio) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -147,7 +141,7 @@ router.post("/team/add", adminOnly, async (req, res) => {
   }
 });
 
-router.delete("/delete/:id", adminOnly, async (req, res) => {
+router.delete("/team/delete/:id", adminOnly, async (req, res) => {
   try {
     const teamId = req.params.id;
     const deletedTeam = await Team.findByIdAndDelete(teamId);

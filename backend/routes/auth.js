@@ -11,6 +11,8 @@ const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
 console.log('JWT_SECRET:', JWT_SECRET);
 console.log('JWT_EXPIRES_IN:', JWT_EXPIRES_IN);
 console.log('SALT_ROUNDS:', SALT_ROUNDS);
+const Plan = require('../models/plan');
+const Team = require('../models/team');
 
 
 // Register
@@ -100,6 +102,14 @@ router.post('/login', async (req, res) => {
     res.json(plans);
   } catch (err) {
     res.status(500).json({ error: "Failed to retrieve plans" });
+  }
+});
+router.get("/team/all", async (req, res) => {
+  try {
+    const team = await Team.find().sort({ createdAt: -1 });
+    res.json(team);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to retrieve team" });
   }
 });
 
