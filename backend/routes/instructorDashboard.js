@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const { authenticateToken } = require('../middleware/auth');
+const e = require('express');
 const router = express.Router();
 
 // ================== GET INSTRUCTOR DASHBOARD DATA ==================
@@ -72,8 +73,8 @@ router.post('/assign-student', authenticateToken, async (req, res) => {
     }
 
     // Update references
-    if (!instructor.instructorDetails.assignedStudents.includes(studentId)) {
-      instructor.instructorDetails.assignedStudents.push(studentId);
+    if (!instructor.instructorDetails.assignedStudents.includes(email)) {
+      instructor.instructorDetails.assignedStudents.push(email);
       student.studentDetails.assignedInstructor = instructor._id;
       await Promise.all([instructor.save(), student.save()]);
     }
