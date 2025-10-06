@@ -73,8 +73,8 @@ router.post('/assign-student', authenticateToken, async (req, res) => {
     }
 
     // Update references
-    if (!instructor.instructorDetails.assignedStudents.includes(email)) {
-      instructor.instructorDetails.assignedStudents.push(email);
+    if (!instructor.instructorDetails.assignedStudents.includes(student._id)) {
+      instructor.instructorDetails.assignedStudents.push(student._id);
       student.studentDetails.assignedInstructor = instructor._id;
       await Promise.all([instructor.save(), student.save()]);
     }
