@@ -93,7 +93,7 @@ app.use("/api/admin/accidents", adminAccidentRoutes);
 // ======================
 app.get("/", (req, res) => {
   res.json({
-    status: "✅ OK",
+    status: "OK",
     message: "Belt Driving School Backend with MongoDB is running smoothly",
     environment: process.env.NODE_ENV || "development",
   });
@@ -120,7 +120,7 @@ app.use((err, req, res, next) => {
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("✅ MongoDB Connected Successfully");
+    console.log("MongoDB Connected Successfully");
     app.listen(PORT, () =>
       console.log(` Server running on http://localhost:${PORT}`)
     );
