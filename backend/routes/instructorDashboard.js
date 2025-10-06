@@ -84,4 +84,31 @@ router.post('/assign-student', authenticateToken, async (req, res) => {
   }
 });
 
+router.get('/:id/students', authenticateToken, async (req, res) => {
+  try {
+    const instructorId = req.params.id;
+
+    // Check if the instructor exists
+    const instructor = await User.findById(instructorId);
+    if (!instructor || instructor.role !== 'instructor') {
+      return res.status(404).json({ error: 'Instructor not found or not authorized' });
+    }
+
+    // Find all students assigned to this instructor
+    const students = await User.find({
+      'studentDetails.assignedInstructor': instructorId,
+      role: 'student'
+    }).select('fullName email phone studentDetails');
+
+    res.json({
+      message: `Students assigned to ${instructor.fullName}`,
+      totalStudents: students.length,
+      students,
+    });
+  } catch (err) {
+    console.error('Error fetching instructor students:', err.message);
+    res.status(500).json({ error: 'Server error while fetching students' });
+  }
+});
+
 module.exports = router;
