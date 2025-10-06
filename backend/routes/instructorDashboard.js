@@ -59,14 +59,14 @@ router.put('/update-profile', authenticateToken, async (req, res) => {
 // ================== ADD STUDENT TO INSTRUCTOR ==================
 router.post('/assign-student', authenticateToken, async (req, res) => {
   try {
-    const { studentId } = req.body;
+    const { email } = req.body;
 
     const instructor = await User.findById(req.user.id);
     if (!instructor || instructor.role !== 'instructor') {
       return res.status(403).json({ error: 'Only instructors can assign students.' });
     }
 
-    const student = await User.findById(studentId);
+    const student = await User.findOne({ email });
     if (!student || student.role !== 'student') {
       return res.status(404).json({ error: 'Student not found.' });
     }
