@@ -28,6 +28,16 @@ const adminAuthRoutes = require("./backend/routes/adminAuth");
 const adminDashboardRoutes = require("./backend/routes/adminDashboard");
 const adminAccidentRoutes = require("./backend/routes/adminAccidents");
 const resendEmailConfirmationRoutes = require("./backend/routes/resendEmailConfirmation");
+const faqRoutes = require('./backend/routes/faqRoutes');
+const instructorRoutes = require('./backend/routes/instructorRoutes');
+const userActivityRoutes = require('./backend/routes/userActivityRoutes');
+const instructorDashboardRoutes = require('./backend/routes/instructorDashboard');
+
+
+
+
+
+
 
 // ======================
 //  Middleware Setup
@@ -55,7 +65,16 @@ app.use("/api/auth/confirm-email", confirmEmailRoutes);
 app.use("/api/plan", planRoutes);
 app.use("/api/forgot-password", forgotPasswordRoutes);
 app.use("/api/auth/resend-confirmation", resendEmailConfirmationRoutes);
+app.use('/api/faqs', faqRoutes);
 
+// add instructor routes
+app.use('/api/instructors', instructorRoutes);
+
+// Instructor Routes
+app.use('/api/instructor/dashboard', instructorDashboardRoutes);
+
+//student activity routes
+app.use('/api/user/activity', userActivityRoutes);
 
 // User Routes
 app.use("/api/user", userRoutes);

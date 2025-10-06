@@ -92,7 +92,7 @@ router.get('/hire-requests', adminOnly, async (req, res) => {
 
 // Admin stats
 router.get('/stats', adminOnly, async (req, res) => {
-
+ 
   const totalUsers = await User.countDocuments({ role: 'user' });
   const totalAdmins = await User.countDocuments({ role: 'admin' });
   const totalStudents = await User.countDocuments({ role: 'student' });
