@@ -1,495 +1,384 @@
-Excellent — here’s your **route documentation rewritten professionally**, with consistent formatting, clear explanations, and a structure suitable for a technical document or API reference.
+USER ROUTES
+1. Register a new user
 
----
+POST /auth/register
 
-# 🚗 Belt Driving School API – User Routes Documentation
+Payload:
 
-## Overview
-
-The following routes handle **user authentication and profile management** within the Belt Driving School system.
-
-> **Note:**
->
-> * All issued JWT tokens expire **1 hour** after generation.
-> * Ensure each protected route request includes the token in the `Authorization` header as:
->
->   ```
->   Authorization: Bearer <token>
->   ```
-
----
-
-## 🔹 1. Register a New User
-
-**Endpoint:**
-
-```
-POST https://belt-driving-school-backend-3.onrender.com/api/auth/register
-```
-
-**Description:**
-Creates a new user account in the system.
-
-**Request Body:**
-
-```json
 {
-  "fullname": "Sheema",
-  "email": "Sheema@gmail.com",
-  "password": "SamplePassword1233",
-  "phone": "+234904034567",
-  "role": "user"
+  "fullName": "John Doe",
+  "email": "johndoe@gmail.com",
+  "password": "Password123",
+  "phone": "+2348012345678",
+  "role": "student"
 }
-```
 
-**Successful Response (200 OK):**
 
-```json
+Response (201):
+
 {
-  "message": "User registered",
+  "message": "User registered successfully. Please verify your email.",
   "user": {
-    "id": "68e0f177d99d3dc2b79af118",
-    "fullName": "Sheema",
-    "email": "sheema@gmail.com"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "_id": "66e8a6f5dcbf8b9a11f0a823",
+    "fullName": "John Doe",
+    "email": "johndoe@gmail.com",
+    "role": "student"
+  }
 }
-```
 
-**Notes:**
+2. Confirm Email
 
-* The `token` should be stored securely on the client side for authentication.
-* The `role` field currently accepts `"user"` or `"admin"` depending on user privileges.
+POST /auth/confirm-email
 
----
-## 🔹 1. Confirm email
+Payload:
 
-**Endpoint:**
-
-```
-POST https://belt-driving-school-backend-3.onrender.com/api/auth/confirm-email
-```
-
-**Description:**
-Confirms registration email account in the system.
-
-**Request Body:**
-
-```json
 {
-  "email": "Sheema@gmail.com",
-  "code": "292923"
+  "email": "johndoe@gmail.com",
+  "code": "392841"
 }
-```
 
-**Successful Response (200 OK):**
 
-```json
+Response (200):
+
 {
-   message: "Email successfully verified! You can now log in."
+  "message": "Email successfully verified. You can now log in."
 }
-```
 
-**Notes:**
+3. Login
 
-* The `token` should be stored securely on the client side for authentication.
-* The `role` field currently accepts `"user"` or `"admin"` depending on user privileges.
+POST /auth/login
 
----
+Payload:
 
-## 🔹 3. User Login
-
-**Endpoint:**
-
-```
-POST https://belt-driving-school-backend-3.onrender.com/api/auth/login
-```
-
-**Description:**
-Authenticates an existing user and issues a new JWT token valid for one hour.
-
-**Request Body:**
-
-```json
 {
-  "email": "Sheema@gmail.com",
-  "password": "SamplePassword1233"
+  "email": "johndoe@gmail.com",
+  "password": "Password123"
 }
-```
-** not verified ** 
-json 
 
-  { error: "Please verify your email before logging in." }
 
-**Successful Response (200 OK):**
+Response (200):
 
-```json
 {
-  "message": "Authenticated",
+  "token": "jwt_token_here",
   "user": {
-    "id": "68e0f177d99d3dc2b79af118",
-    "fullName": "Sheema",
-    "email": "sheema@gmail.com"
+    "_id": "66e8a6f5dcbf8b9a11f0a823",
+    "fullName": "John Doe",
+    "email": "johndoe@gmail.com",
+    "role": "student"
+  }
+}
+
+4. Forgot Password
+
+POST /auth/forgot-password
+
+Payload:
+
+{
+  "email": "johndoe@gmail.com"
+}
+
+
+Response (200):
+
+{
+  "message": "Password reset link sent to your email."
+}
+
+5. Reset Password
+
+POST /auth/reset-password
+
+Payload:
+
+{
+  "token": "reset_token_here",
+  "newPassword": "NewPassword123"
+}
+
+
+Response (200):
+
+{
+  "message": "Password successfully updated."
+}
+
+ PLAN ROUTES
+1. Add a new plan (Admin only)
+
+POST /plans
+
+Payload:
+
+{
+  "name": "Beginner Plan",
+  "description": "Perfect for beginners with no prior experience.",
+  "price": 15000,
+  "duration": "4 weeks",
+  "features": [
+    "10 practical driving lessons",
+    "1 theory class",
+    "Access to learning materials"
+  ]
+}
+
+
+Response (201):
+
+{
+  "message": "Plan created successfully.",
+  "plan": {
+    "_id": "67044dba4e38b9c912bc7b34",
+    "name": "Beginner Plan",
+    "price": 15000,
+    "duration": "4 weeks"
+  }
+}
+
+2. Get all plans
+
+GET /plans
+
+Response (200):
+
+[
+  {
+    "_id": "67044dba4e38b9c912bc7b34",
+    "name": "Beginner Plan",
+    "price": 15000,
+    "duration": "4 weeks"
   },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
+  {
+    "_id": "67044dba4e38b9c912bc7b90",
+    "name": "Advanced Plan",
+    "price": 30000,
+    "duration": "8 weeks"
+  }
+]
 
-**Notes:**
+ TRANSACTION ROUTES
+1. Initialize Paystack payment
 
-* If credentials are invalid, the API returns an authentication error (HTTP 401).
-* Tokens from this route must be used to access protected endpoints.
+POST /payment/initialize
 
----
+Payload:
 
-## 🔹 4. Retrieve User Information
-
-**Endpoint:**
-
-```
-GET https://belt-driving-school-backend-3.onrender.com/api/user/me
-```
-
-**Description:**
-Fetches the authenticated user’s profile details using their JWT token.
-
-**Headers:**
-
-```
-Authorization: Bearer <token>
-```
-
-**Successful Response (200 OK):**
-
-```json
 {
-  "id": "68e0f177d99d3dc2b79af118",
-  "fullName": "Sheema",
-  "email": "sheema@gmail.com",
-  "role": "user",
-  "phone": "+234904034567"
+  "email": "johndoe@gmail.com",
+  "amount": 15000,
+  "planId": "67044dba4e38b9c912bc7b34"
 }
-```
 
-**Error Response (401 Unauthorized):**
 
-```json
+Response (200):
+
 {
-  "message": "Token expired or invalid"
+  "authorization_url": "https://checkout.paystack.com/xxxxxx",
+  "access_code": "xxxxxx",
+  "reference": "ref_12345"
 }
-```
 
----
+2. Verify payment
 
+GET /payment/verify/:reference
 
+Response (200):
 
-## 🔹 4. Retrieve User Transaction
-
-**Endpoint:**
-
-```
-GET https://belt-driving-school-backend-3.onrender.com/api/user/transactions
-```
-
-**Description:**
-Fetches the authenticated user’s transaction details using their JWT token.
-
-**Headers:**
-
-```
-Authorization: Bearer <token>
-```
-
-**Successful Response (200 OK):**
-
-```json
 {
-  "id": "68e0f177d99d3dc2b79af118",
-  "fullName": "Sheema",
-  "email": "sheema@gmail.com",
-  "role": "user",
-  "phone": "+234904034567"
+  "message": "Payment verified successfully",
+  "data": {
+    "status": "success",
+    "amount": 15000,
+    "plan": "Beginner Plan",
+    "transaction_date": "2025-10-04T14:00:00Z"
+  }
 }
-```
 
-**Error Response (401 Unauthorized):**
+ INSTRUCTOR ROUTES
+1. Add new instructor
 
-```json
+POST /instructors
+
+Payload:
+
 {
-  "message": "Token expired or invalid"
+  "fullName": "Jane Smith",
+  "email": "janesmith@gmail.com",
+  "password": "Password123",
+  "specialization": "Defensive Driving",
+  "experienceYears": 5,
+  "phone": "+2348011122233"
 }
-```
 
 
+Response (201):
 
-These routes handle the **password recovery process** for both users and administrators.
-They include generating a **secure password reset token** and submitting a **new password** through a verified link.
-
-> **Note:**
->
-> * Reset links are valid for **15 minutes**.
-> * Both **users** and **admins** can initiate password resets.
-> * Tokens are **JWT-based** and securely signed with the server’s secret key.
-
----
-
-## 🔹 1. Request Password Reset (Forgot Password)
-
-**Endpoint:**
-
-```
-POST https://belt-driving-school-backend-3.onrender.com/api/auth/forgot-password
-```
-
-**Description:**
-Generates a temporary **password reset link** and sends it to the user’s or admin’s email address.
-The link contains a secure token valid for **15 minutes**.
-
-**Request Body:**
-
-```json
 {
-  "email": "Sheema@gmail.com",
-  "role": "user"
+  "message": "Instructor added successfully",
+  "instructor": {
+    "_id": "6704528c5dc78a2b12345f90",
+    "fullName": "Jane Smith",
+    "specialization": "Defensive Driving"
+  }
 }
-```
 
-| Field | Type   | Required | Description                                   |
-| ----- | ------ | -------- | --------------------------------------------- |
-| email | string | ✅ Yes    | The email address associated with the account |
-| role  | string | ✅ Yes    | Either `"user"` or `"admin"`                  |
+2. Get all instructors
 
-**Successful Response (200 OK):**
+GET /instructors
 
-```json
+Response (200):
+
+[
+  {
+    "_id": "6704528c5dc78a2b12345f90",
+    "fullName": "Jane Smith",
+    "experienceYears": 5
+  }
+]
+
+3. Update instructor
+
+PUT /instructors/:id
+
+Payload:
+
 {
-  "message": "Password reset link generated",
-  "resetUrl": "http://localhost:3000/reset-password?token=eyJhbGciOi...&role=user"
+  "specialization": "Advanced Highway Driving"
 }
-```
 
-**Error Responses:**
 
-| Code | Message                       |
-| ---- | ----------------------------- |
-| 400  | `Email and role are required` |
-| 404  | `Account not found`           |
-| 500  | `Internal server error`       |
+Response (200):
 
-**Notes:**
-
-* The backend generates a JWT-based token and stores it in the database with a 15-minute expiry time.
-* The token should be sent via email (email-sending logic can be integrated later using **Nodemailer** or any SMTP service).
-
----
-
-## 🔹 2. Reset Password
-
-**Endpoint:**
-
-```
-POST https://belt-driving-school-backend-3.onrender.com/api/auth/reset-password
-```
-
-**Description:**
-Resets the password of a verified user or admin using a valid **reset token**.
-Once successful, the token is invalidated to prevent reuse.
-
-**Request Body:**
-
-```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "newPassword": "NewStrongPassword123!",
-  "role": "user"
+  "message": "Instructor updated successfully"
 }
-```
 
-| Field       | Type   | Required | Description                                       |
-| ----------- | ------ | -------- | ------------------------------------------------- |
-| token       | string | ✅ Yes    | JWT reset token generated from `/forgot-password` |
-| newPassword | string | ✅ Yes    | The new password to set                           |
-| role        | string | ✅ Yes    | Either `"user"` or `"admin"`                      |
+4. Delete instructor
 
-**Successful Response (200 OK):**
+DELETE /instructors/:id
 
-```json
+Response (200):
+
 {
-  "message": "Password reset successful"
+  "message": "Instructor deleted successfully"
 }
-```
 
-**Error Responses:**
+ ACCIDENT REPORT ROUTES
+1. Report an accident
 
-| Code | Message                              |
-| ---- | ------------------------------------ |
-| 400  | `Invalid or expired token`           |
-| 400  | `Token, password, and role required` |
-| 500  | `Internal server error`              |
+POST /accidents/report
 
-**Notes:**
+Payload:
 
-* Once the password is successfully changed:
-
-  * The reset token and expiration fields are cleared.
-  * The new password is hashed using **bcrypt** before saving.
-* Tokens automatically expire after **15 minutes**.
-
----
-
-## ⚙️ Technical Flow
-
-| Step | Action                       | Description                                                              |
-| ---- | ---------------------------- | ------------------------------------------------------------------------ |
-| 1    | User requests password reset | `/forgot-password` generates a secure JWT and stores it in the DB.       |
-| 2    | Email sent                   | The user receives a link containing the token and role parameters.       |
-| 3    | User submits new password    | `/reset-password` validates the token and updates the password securely. |
-
----
-
-## 🔒 Summary
-
-| Action                 | Method | Endpoint                    | Auth Required |
-| ---------------------- | ------ | --------------------------- | ------------- |
-| Request password reset | `POST` | `/api/auth/forgot-password` | ❌ No          |
-| Reset password         | `POST` | `/api/auth/reset-password`  | ❌ No          |
-
-
-## ⚙️ Summary
-
-| Action             | Method | Endpoint             | Auth Required |
-| ------------------ | ------ | -------------------- | ------------- |
-| Register new user  | `POST` | `/api/auth/register` | ❌ No          |
-| Login              | `POST` | `/api/auth/login`    | ❌ No          |
-| Retrieve user info | `GET`  | `/api/user/me`       | ✅ Yes         |
-
----
-
-> All admin endpoints require a valid **admin JWT token** in the `Authorization` header:
-> ```
-> Authorization: Bearer <admin_token>
-> ```
-
----
-
-## 1. Admin Authentication
-
-### **POST /api/admin/auth**
-Authenticate an admin account. Returns a JWT token for use with restricted admin endpoints.
-
-**Endpoint**
-
-**Request Body**
-```json
 {
-  "email": "admin@example.com",
+  "userId": "67044dba4e38b9c912bc7b90",
+  "location": "Ikeja, Lagos",
+  "description": "Minor collision during training session",
+  "date": "2025-10-04"
+}
+
+
+Response (201):
+
+{
+  "message": "Accident reported successfully"
+}
+
+2. List all reported accidents (Admin only)
+
+GET /admin/accidents
+
+Response (200):
+
+[
+  {
+    "_id": "6704564c5dc78a2b12345f99",
+    "user": "John Doe",
+    "location": "Ikeja, Lagos",
+    "description": "Minor collision during training session",
+    "date": "2025-10-04"
+  }
+]
+
+ ADMIN ROUTES
+1. Admin Login
+
+POST /admin/auth
+
+Payload:
+
+{
+  "email": "admin@beltdrivingschool.com",
   "password": "AdminPassword123"
 }
+
+
+Response (200):
+
 {
-  "token": "eyJhbGci...<jwt_token_here>",
+  "token": "jwt_token_here",
   "admin": {
-    "id": "60f7e1b9aabc12345def6789",
-    "name": "SuperAdmin",
-    "email": "admin@example.com",
+    "email": "admin@beltdrivingschool.com",
     "role": "admin"
   }
 }
-GET https://belt-driving-school.vercel.app/api/admin/dashboard/users
-Authorization: Bearer <admin_token>
-[
-  {
-    "id": "60a1f2e5b9abc12345d67890",
-    "name": "John Doe",
-    "email": "johndoe@example.com",
-    "role": "student",
-    "phone": "08012345678",
-    "createdAt": "2025-09-01T12:34:56.789Z"
-  },
-  {
-    "id": "60b2c3d4e5f123456789abcd",
-    "name": "Instructor Jane",
-    "email": "jane@example.com",
-    "role": "instructor",
-    "phone": "08023456789",
-    "createdAt": "2025-09-05T08:15:22.123Z"
-  }
-]
-GET https://belt-driving-school.vercel.app/api/admin/accidents
-Authorization: Bearer <admin_token>
-[
-  {
-    "id": "64a1b2c3d4e5f67890ab1234",
-    "user": {
-      "id": "60a1f2e5b9abc12345d67890",
-      "name": "John Doe",
-      "email": "johndoe@example.com"
-    },
-    "location": "Ikeja, Lagos",
-    "description": "Rear-end collision at crosswalk",
-    "date": "2025-10-03T14:20:10.000Z",
-    "status": "reported",
-    "createdAt": "2025-10-03T14:20:10.000Z"
-  }
-]
-GET https://belt-driving-school.vercel.app/api/admin/dashboard/transactions
-Authorization: Bearer <admin_token>
 
-[
-  {
-    "id": "txn_123abc456def",
-    "user": {
-      "id": "60a1f2e5b9abc12345d67890",
-      "name": "John Doe",
-      "email": "johndoe@example.com"
-    },
-    "planName": "Standard Plan",
-    "amount": 80000,
-    "currency": "NGN",
-    "status": "paid",
-    "reference": "ref_abcdef123456",
-    "createdAt": "2025-10-02T08:45:33.000Z"
-  }
-]
+2. Dashboard Stats
 
-Authorization: Bearer <admin_token>
-GET https://belt-driving-school.vercel.app/api/admin/dashboard/hire-requests
-[
-  {
-    "id": "hrq_987xyz654abc",
-    "user": {
-      "id": "60a1f2e5b9abc12345d67890",
-      "name": "John Doe",
-      "email": "johndoe@example.com"
-    },
-    "driverType": "private",
-    "duration": "3 months",
-    "status": "pending",
-    "createdAt": "2025-10-03T10:00:00.000Z"
-  }
-]
-GET https://belt-driving-school.vercel.app/api/admin/dashboard/stats
-Authorization: Bearer <admin_token>
+GET /admin/dashboard/stats
+
+Response (200):
+
 {
-  "totals": {
-    "users": 1200,
-    "students": 900,
-    "instructors": 50,
-    "admins": 5
-  },
-  "orders": {
-    "totalOrders": 800,
-    "paidOrders": 650,
-    "pendingOrders": 150
-  }
+  "totalUsers": 150,
+  "totalStudents": 90,
+  "totalInstructors": 10,
+  "totalOrders": 120,
+  "totalPaidOrders": 100
 }
 
+3. Get all registered users
 
+GET /admin/dashboard/users
 
+Response (200):
 
+[
+  {
+    "_id": "67044dba4e38b9c912bc7b34",
+    "fullName": "John Doe",
+    "email": "johndoe@gmail.com",
+    "role": "student"
+  }
+]
 
+4. Get transaction history
 
+GET /admin/dashboard/transactions
 
+Response (200):
 
+[
+  {
+    "user": "John Doe",
+    "amount": 15000,
+    "status": "paid",
+    "plan": "Beginner Plan",
+    "date": "2025-10-04"
+  }
+]
 
+5. Get hire driver requests
 
+GET /admin/dashboard/hire-requests
 
+Response (200):
+
+[
+  {
+    "_id": "67045cdb5dc78a2b12345f77",
+    "user": "Jane Doe",
+    "requestType": "Hire driver",
+    "status": "pending"
+  }
+]
