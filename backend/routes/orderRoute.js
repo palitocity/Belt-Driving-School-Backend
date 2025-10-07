@@ -32,6 +32,12 @@ router.post("/:id", authenticateToken, async (req, res) => {
     });
 
     await newOrder.save();
+    const updateUserCurrentPlan = await User.findByIdAndUpdate(userId, { currentPlan: planId }, { new: true });
+    if (!updateUserCurrentPlan) {
+      return res.status(404).json({ message: "User not found to update current plan" });
+    }
+    await updateUserCurrentPlan.save();
+
     res.status(201).json({ success: true, data: newOrder });
   } catch (error) {
     console.error(error);
