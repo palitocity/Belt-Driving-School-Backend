@@ -18,19 +18,20 @@ const userSchema = new mongoose.Schema({
   studentDetails: {
     enrollmentDate: { type: Date, default: Date.now },
     courseLevel: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'] },
-    currentPlan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' }, // Reference to Plan model
+    currentPlan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan', required: true }, // Reference to Plan model
     planAmount: { type: Number, default: 0 },
+    planActive: { type: Boolean, default: false },
     planCurrency: { type: String, default: 'NGN' },
     durationMonths: { type: Number, default: 0 },
     planExpiry: Date,
-    assignedInstructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to Instructor
+    assignedInstructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' ,required: true}, // Reference to Instructor
     progress: { type: Number, default: 0 }, // Percent completed
   },
   instructorDetails: {
     specialization: { type: String },
     experienceYears: { type: Number },
     licenseNumber: { type: String },
-    assignedStudents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    assignedStudents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User',required: true }], // References to Student users
   },
   transactions: [
     {
