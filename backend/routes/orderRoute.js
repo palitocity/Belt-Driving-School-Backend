@@ -8,6 +8,7 @@ const router = express.Router();
  * @desc Create new order
  */
 router.post("/:id", authenticateToken, async (req, res) => {
+
   try {
     const planId = req.params.id;
     if (!planId) {
@@ -36,7 +37,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
     if (!updateUserCurrentPlan) {
       return res.status(404).json({ message: "User not found to update current plan" });
     }
-    await updateUserCurrentPlan.save();
+    // await updateUserCurrentPlan.save();
 
     res.status(201).json({ success: true, data: newOrder });
   } catch (error) {
