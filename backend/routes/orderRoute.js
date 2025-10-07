@@ -41,7 +41,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
     res.status(201).json({ success: true, data: newOrder });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error while creating order" });
+    res.status(500).json({ message: `Server Error while creating order: ${error.message}` });
   }
 });
 
