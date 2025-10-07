@@ -1,5 +1,5 @@
-import express from "express";
-import Order from "../models/Order.js";
+const express = require("express");
+const Order = require("../models/Order");
 const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
 
@@ -73,4 +73,4 @@ router.put("/:id", authenticateToken, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
