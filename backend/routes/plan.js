@@ -7,21 +7,20 @@ const router = express.Router();
 // Process plan
 router.post('/process', authenticateToken, async (req, res) => {
   try {
-    const { planName, price, currency, extras } = req.body;
+    const { planName, price, currency, planId, extras } = req.body;
     if (!planName || !price) return res.status(400).json({ error: 'planName and price are required' });
 
     const order = await Order.create({
       planName,
       price: parseFloat(price),
       currency: currency || 'NGN',
-      extras,
       userId: req.user.id,
-      currentplan: req.body.currentplan,
+      features: extras,
+      currentplan: planId,
       fullName: req.body.fullName,
       email: req.body.email,
       phone: req.body.phone,
       address: req.body.address,
-      
     });
 
     const payment = {
