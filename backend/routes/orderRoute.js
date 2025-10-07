@@ -36,7 +36,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
     await newOrder.save();
     const updateUserCurrentPlan = await User.findByIdAndUpdate(
   userId,
-  { 'studentDetails.currentPlan': planId, 'studentDetails.planAmount': price, 'studentDetails.planCurrency': currency },
+  { 'studentDetails.currentPlan': planId, 'studentDetails.planAmount': price, 'studentDetails.planCurrency': currency , 'studentDetails.planActive': false },
   { new: true }
 );
 
