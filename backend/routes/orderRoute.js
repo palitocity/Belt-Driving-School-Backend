@@ -39,7 +39,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
       return res.status(404).json({ message: "User not found to update current plan" });
     }
 
-    res.status(201).json({ success: true, data: newOrder });
+    res.status(201).json({ success: true, data: `${newOrder} ${updateUserCurrentPlan}` });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: `Server Error while creating order: ${error.message}` });
