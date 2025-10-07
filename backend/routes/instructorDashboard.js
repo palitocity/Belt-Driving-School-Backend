@@ -125,7 +125,7 @@ router.post('/assign-student', authenticateToken, async (req, res) => {
             return res.status(403).json({ error: 'Only instructors can assign students.' });
         }
 
-        const student = await User.findOne({ email, role: 'user' });
+        const student = await User.find({ email, role: 'user' });
         if (!student) {
             return res.status(404).json({ error: 'Student not found.' });
         }
