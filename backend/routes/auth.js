@@ -14,7 +14,6 @@ console.log('SALT_ROUNDS:', SALT_ROUNDS);
 const Plan = require('../models/plan');
 const Team = require('../models/team');
 
-
 // Register
 router.post('/register', async (req, res) => {
   try {
@@ -50,7 +49,6 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
 
 
 // Login

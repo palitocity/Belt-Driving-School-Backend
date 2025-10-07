@@ -15,7 +15,13 @@ router.post('/process', authenticateToken, async (req, res) => {
       price: parseFloat(price),
       currency: currency || 'NGN',
       extras,
-      userId: req.user.id
+      userId: req.user.id,
+      currentplan: req.body.currentplan,
+      fullName: req.body.fullName,
+      email: req.body.email,
+      phone: req.body.phone,
+      address: req.body.address,
+      
     });
 
     const payment = {
