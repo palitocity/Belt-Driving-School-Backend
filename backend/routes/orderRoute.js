@@ -16,7 +16,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
       return res.status(400).json({ message: "Plan ID is required" });
     }
 
-    if (!planName || !price || !userId || !fullName || !email) {
+    if (!planName || !price || !userId || !fullName || !planId || !email) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -32,6 +32,9 @@ router.post("/:id", authenticateToken, async (req, res) => {
       phone,
       address,
     });
+    if (!newOrder) {
+      return res.status(400).json({ message: `Error creating order ${newOrder}` });
+    }
 
     await newOrder.save();
 
