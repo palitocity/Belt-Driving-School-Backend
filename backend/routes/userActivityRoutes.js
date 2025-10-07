@@ -98,7 +98,7 @@ router.get('/plan/:id', authenticateToken, async (req, res) => {
     const user = await User.findById(userId).populate('studentDetails.currentPlan');
 
     const currentPlan = user.studentDetails.currentPlan;
-      if (!currentPlan) return res.status(404).json({ error: 'No active plan found' });
+      if (!currentPlan) return res.status(201).json({ error: 'No active plan found' });
     const { planAmount, planCurrency, durationMonths, planExpiry } = user.studentDetails;
     const userPlan = plan.findById(currentPlan);
   if (!userPlan) return res.status(404).json({ error: 'Plan details not found' });

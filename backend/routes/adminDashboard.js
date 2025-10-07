@@ -218,7 +218,7 @@ router.put("/team/update/:id", adminOnly, async (req, res) => {
 
     const updatedTeam = await Team.findByIdAndUpdate(teamId, { name, role, image, bio }, { new: true });
     if (!updatedTeam) {
-      return res.status(404).json({ error: "Team not found" });
+      return res.status(201).json({ error: "Team not found" });
     }
     res.json({ message: "Team updated successfully", Team: updatedTeam });
   } catch (err) {
