@@ -13,7 +13,7 @@ router.post("/:id", authenticateToken, async (req, res) => {
     if (!planId) {
       return res.status(400).json({ message: "Plan ID is required" });
     }
-    const { planName, price, currency, extras, userId, fullName, email, phone, address } = req.body;
+    const { planName, price, currency, userId, fullName, email, phone, address } = req.body;
 
     if (!planName || !price || !userId || !fullName || !email) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -23,7 +23,6 @@ router.post("/:id", authenticateToken, async (req, res) => {
       planName,
       price,
       currency,
-      extras,
       userId,
       planId,
       fullName,
