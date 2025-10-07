@@ -96,7 +96,8 @@ router.post('/login', async (req, res) => {
   }
   // ===================== GET ALL PLANS =====================
 
-});router.get("/plans", async (req, res) => {
+});
+router.get("/plans", async (req, res) => {
   try {
     const plans = await Plan.find().sort({ createdAt: -1 });
     res.json(plans);

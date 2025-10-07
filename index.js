@@ -32,7 +32,7 @@ const faqRoutes = require('./backend/routes/faqRoutes');
 const instructorRoutes = require('./backend/routes/instructorRoutes');
 const userActivityRoutes = require('./backend/routes/userActivityRoutes');
 const instructorDashboardRoutes = require('./backend/routes/instructorDashboard');
-
+const  orderRoutes = require('./backend/routes/orderRoute');
 
 
 
@@ -75,6 +75,9 @@ app.use('/api/instructor/dashboard', instructorDashboardRoutes);
 
 //student activity routes
 app.use('/api/user/activity', userActivityRoutes);
+
+//order routes
+app.use("/api/orders", orderRoutes);
 
 // User Routes
 app.use("/api/user", userRoutes);

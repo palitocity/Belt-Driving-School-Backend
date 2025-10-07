@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
+const Order = require("./Order");
 const transactionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  firstName: String,
+  OrderId: { type: mongoose.Schema.Types.ObjectId, ref: "Order" },
+ firstName: String,
   lastName: String,
   email: String,
   phone: String,

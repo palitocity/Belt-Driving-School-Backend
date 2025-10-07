@@ -22,7 +22,7 @@ router.post('/process', authenticateToken, async (req, res) => {
       paymentId: `pay_${order._id}`,
       amount: order.price,
       currency: order.currency,
-      paymentUrl: `https://example.com/pay/${order._id}`,
+      paymentUrl: `${process.env.FRONTEND_URL}/pay/${order._id}`,
       order
     };
 
