@@ -92,9 +92,11 @@ router.get('/transactions', authenticateToken, async (req, res) => {
 });
 
 // ================== Get user plan ==================
-router.get('/plan', authenticateToken, async (req, res) => {
+router.get('/plan/:id', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('studentDetails.currentPlan');
+    const userId = req.params.id;
+    const user = await User.findById(userId).populate('studentDetails.currentPlan');
+
     const currentPlan = user.studentDetails.currentPlan;
       if (!currentPlan) return res.status(404).json({ error: 'No active plan found' });
     const { planAmount, planCurrency, durationMonths, planExpiry } = user.studentDetails;
