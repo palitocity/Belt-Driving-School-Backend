@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { text } = require('express');
+const plan = require('./plan');
 
 const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true, capitalize: true, minlength: 3, maxlength: 255 },
@@ -18,6 +19,10 @@ const userSchema = new mongoose.Schema({
     enrollmentDate: { type: Date, default: Date.now },
     courseLevel: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'] },
     currentPlan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' }, // Reference to Plan model
+    planAmount: { type: Number, default: 0 },
+    planCurrency: { type: String, default: 'NGN' },
+    durationMonths: { type: Number, default: 0 },
+    planExpiry: Date,
     assignedInstructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to Instructor
     progress: { type: Number, default: 0 }, // Percent completed
   },
