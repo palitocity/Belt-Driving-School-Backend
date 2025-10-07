@@ -1,7 +1,7 @@
-import express from "express";
-import axios from "axios";
-import dotenv from "dotenv";
-import Transaction from "../models/Transaction.js";
+const express  = require("express");
+const axios  = require("axios");
+const  dotenv =require("dotenv");
+const Transaction =require("../models/Transaction.js"); 
 
 dotenv.config();
 
