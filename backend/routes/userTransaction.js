@@ -1,7 +1,7 @@
 const express  = require("express");
 const axios  = require("axios");
 const  dotenv =require("dotenv");
-const Transaction =require("../models/Transaction.js"); 
+const Transaction =require("../models/transaction"); 
 
 dotenv.config();
 
