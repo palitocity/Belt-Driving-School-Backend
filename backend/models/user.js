@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, minlength: 6, maxlength: 255 },
   role: { type: String, enum: ['user', 'admin', 'student', 'instructor'], default: 'student' },
   isVerified: { type: Boolean, default: false },
+  address: { type: String, maxlength: 500 },
   emailToken: String,
   emailTokenExpiry: Date,
   resetPasswordToken: String,
@@ -23,6 +24,7 @@ const userSchema = new mongoose.Schema({
   instructorDetails: {
     specialization: { type: String },
     experienceYears: { type: Number },
+    licenseNumber: { type: String },
     assignedStudents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   transactions: [
