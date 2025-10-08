@@ -2,7 +2,15 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const nodemailer = require("nodemailer");
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -41,6 +49,24 @@ router.post('/register', async (req, res) => {
       emailTokenExpiry: Date.now() + 10 * 60 * 1000, // 10 minutes
     });
     user.save();
+    // Send activation email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Activate Your Account - Belt Driving School 🚗",
+      html: `
+        <div style="font-family:Arial,sans-serif;padding:20px">
+          <h2>Welcome to Belt Driving School!</h2>
+          <p>Hi ${fullname},</p>
+          <p>Use this code to activate your account:</p>
+          <h1 style="color:#2F855A">${emailToken}</h1>
+          <p>This code will expire in 10 minutes.</p>
+          <p>Thank you for joining us!</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
     const token = jwt.sign({ id: user._id, email: user.email ,role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     res.status(201).json({ message: 'User registered', user: { id: user._id, fullName: user.fullName, email: user.email }, token });
