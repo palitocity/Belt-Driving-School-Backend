@@ -227,4 +227,38 @@ router.put("/team/update/:id", adminOnly, async (req, res) => {
   }
 });
 
+// =============   Retrive Admin Profile  ===================
+router.get('/admin/profile', adminOnly, async (req, res) => {
+  try {
+    const admin = await User.findById(req.id).select('-password');
+    if (!admin) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
+    res.json({ admin });
+  } catch (err) {
+    console.error("Error retrieving admin profile:", err);
+    res.status(500).json({ error: `Error retrieving admin profile: ${err.message}` });
+  }
+});
+
+router.put('/admin/profile/update', adminOnly, async (req, res) => {
+  try {
+    const { fullName, phone, profileImage } = req.body;
+
+    const updatedAdmin = await User.findByIdAndUpdate(
+      req.id,
+      { fullName, phone, profileImage },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!updatedAdmin) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
+    res.json({ message: "Profile updated successfully", admin: updatedAdmin });
+  } catch (err) {
+    console.error("Error updating admin profile:", err);
+    res.status(500).json({ error: `Error updating admin profile: ${err.message}` });
+  }
+});
+
 module.exports = router;

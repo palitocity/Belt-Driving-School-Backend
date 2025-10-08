@@ -86,12 +86,18 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
+     const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+    );
+
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-     if (!user.isVerified)
-    return res.status(401).json({ error: "Please verify your email before logging in." });
+    if (!user.isVerified)
+      return res.status(401).json({ error: "Please verify your email before logging in.", token });
   
     console.log('Comparing passwords:', password, user.password);
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -103,12 +109,7 @@ router.post('/login', async (req, res) => {
     if (!valid) {
       return res.status(401).json({ error: `Invalid credentials` });
     }
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
-    );
-
+   
     res.json({
       message: 'Authenticated',
       user: { id: user._id, fullName: user.fullName, email: user.email, role: user.role },
