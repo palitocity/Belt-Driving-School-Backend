@@ -25,7 +25,6 @@ const Team = require('../models/team');
 // Register
 router.post('/register', async (req, res) => {
   try {
-
     const { fullname, email, password, phone, role } = req.body;
 
     if (!fullname || !email || !password || !role) {
@@ -50,23 +49,23 @@ router.post('/register', async (req, res) => {
     });
     user.save();
     // Send activation email
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Activate Your Account - Belt Driving School 🚗",
-      html: `
-        <div style="font-family:Arial,sans-serif;padding:20px">
-          <h2>Welcome to Belt Driving School!</h2>
-          <p>Hi ${fullname},</p>
-          <p>Use this code to activate your account:</p>
-          <h1 style="color:#2F855A">${emailToken}</h1>
-          <p>This code will expire in 10 minutes.</p>
-          <p>Thank you for joining us!</p>
-        </div>
-      `,
-    };
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: email,
+    //   subject: "Activate Your Account - Belt Driving School 🚗",
+    //   html: `
+    //     <div style="font-family:Arial,sans-serif;padding:20px">
+    //       <h2>Welcome to Belt Driving School!</h2>
+    //       <p>Hi ${fullname},</p>
+    //       <p>Use this code to activate your account:</p>
+    //       <h1 style="color:#2F855A">${emailToken}</h1>
+    //       <p>This code will expire in 10 minutes.</p>
+    //       <p>Thank you for joining us!</p>
+    //     </div>
+    //   `,
+    // };
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
     const token = jwt.sign({ id: user._id, email: user.email ,role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     res.status(201).json({ message: 'User registered', user: { id: user._id, fullName: user.fullName, email: user.email }, token });
@@ -117,7 +116,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error: ${err.message}` });
   }
   // ===================== GET ALL PLANS =====================
 
