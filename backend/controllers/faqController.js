@@ -49,17 +49,19 @@ exports.updateFAQ = async (req, res) => {
 
     if (!question || !answer) {
       return res.status(400).json({ message: "Question and answer are required" });
-    } 
+    }
     const updatedFAQ = await FAQ.findByIdAndUpdate(
       faqId,
       { question, answer }, // Use the destructured values here
       { new: true }
-    );      
+    );
+
     if (!updatedFAQ) {
       return res.status(404).json({ message: "FAQ not found" });
-    }   
+    }
     res.status(200).json({ message: "FAQ updated successfully", data: updatedFAQ });
   } catch (error) {
     console.error("Update FAQ Error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
-  } 
+  }
+};
