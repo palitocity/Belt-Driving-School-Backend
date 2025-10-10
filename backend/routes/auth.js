@@ -2,15 +2,16 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -85,11 +86,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
-    );
+    
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
@@ -101,7 +98,11 @@ router.post('/login', async (req, res) => {
     console.log('Comparing passwords:', password, user.password);
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     console.log('Hashed password for comparison:', passwordHash);
-
+ const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+    );
     const valid = await bcrypt.compare(password, user.password);
 
     console.log('Password valid:', valid);
