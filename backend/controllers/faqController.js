@@ -21,6 +21,7 @@ exports.addFAQ = async (req, res) => {
 exports.getFAQs = async (req, res) => {
   try {
     const faqs = await FAQ.find().sort({ createdAt: -1 });
+    console.log("Fetched FAQs:", faqs);
     res.status(200).json({ count: faqs.length, data: faqs });
   } catch (error) {
     console.error("Get FAQs Error:", error);
