@@ -1,7 +1,7 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const router = express.Router();
-const Consult = require("../models/Consult");
+const Consult = require("../models/consult");
 const adminOnly = require('../middleware/admin');
 
 // Limit consult submissions: 3 per 10 minutes per IP
