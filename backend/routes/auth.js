@@ -6,13 +6,21 @@ const nodemailer = require("nodemailer");
 
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.SMTP_HOST || 'server231.web-hosting.com',
+  port: process.env.SMTP_PORT || 465,
+  secure: true, // use true for port 465
   auth: {
     user: process.env.EMAIL_USER || 'test@palitocity.online',
     pass: process.env.EMAIL_PASS || 'Testing@12345Az',
   },
 });
-
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('❌ Mail transporter error:', error);
+  } else {
+    console.log('✅ Mail transporter is ready');
+  }
+});
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
@@ -39,15 +47,15 @@ router.post('/register', async (req, res) => {
     console.log('Password hash:', passwordHash, 'using salt:', userSalt, 'for password:', password);
     const emailToken = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
     const user = await User.create(
-      { 
+      {
         fullName: fullname,
-         email: email.toLowerCase(),
-          password: passwordHash,
-          role,
-          phone,
-          emailToken,
-      emailTokenExpiry: Date.now() + 10 * 60 * 1000, // 10 minutes
-    });
+        email: email.toLowerCase(),
+        password: passwordHash,
+        role,
+        phone,
+        emailToken,
+        emailTokenExpiry: Date.now() + 10 * 60 * 1000, // 10 minutes
+      });
     user.save();
     // Send activation email
     const mailOptions = {
@@ -65,8 +73,14 @@ router.post('/register', async (req, res) => {
         </div>
       `,
     };
-     await transporter.sendMail(mailOptions);
-    const token = jwt.sign({ id: user._id, email: user.email ,role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log('✅ Email sent successfully');
+    } catch (emailErr) {
+      console.error('❌ Failed to send email:', emailErr);
+    }
+
+    const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     res.status(201).json({ message: 'User registered', user: { id: user._id, fullName: user.fullName, email: user.email }, token });
   } catch (err) {
@@ -85,7 +99,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-    
+
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
@@ -93,11 +107,11 @@ router.post('/login', async (req, res) => {
     }
     if (!user.isVerified)
       return res.status(401).json({ error: "Please verify your email before logging in.", token });
-  
+
     console.log('Comparing passwords:', password, user.password);
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     console.log('Hashed password for comparison:', passwordHash);
- const token = jwt.sign(
+    const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
@@ -108,7 +122,7 @@ router.post('/login', async (req, res) => {
     if (!valid) {
       return res.status(401).json({ error: `Invalid credentials` });
     }
-   
+
     res.json({
       message: 'Authenticated',
       user: { id: user._id, fullName: user.fullName, email: user.email, role: user.role },
