@@ -16,8 +16,7 @@ const PORT = process.env.PORT || 4000;
 const path = require("path");
 
 // Security Middlewares
-app.use(mongoSanitize());
-app.use(xss());
+
 
 // ======================
 // Import Routes
