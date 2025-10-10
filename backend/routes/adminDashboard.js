@@ -228,9 +228,9 @@ router.put("/team/update/:id", adminOnly, async (req, res) => {
 });
 
 // =============   Retrive Admin Profile  ===================
-router.get('/admin/profile', adminOnly, async (req, res) => {
+router.get('/admin/profile/:id', adminOnly, async (req, res) => {
   try {
-    const admin = await User.findById(req.id).select('-password');
+    const admin = await User.findById(req.params.id).select('-password');
     if (!admin) {
       return res.status(404).json({ error: "Admin not found" });
     }
@@ -241,12 +241,12 @@ router.get('/admin/profile', adminOnly, async (req, res) => {
   }
 });
 
-router.put('/admin/profile/update', adminOnly, async (req, res) => {
+router.put('/admin/profile/update/:id', adminOnly, async (req, res) => {
   try {
     const { fullName, phone, profileImage } = req.body;
 
     const updatedAdmin = await User.findByIdAndUpdate(
-      req.id,
+      req.params.id,
       { fullName, phone, profileImage },
       { new: true, runValidators: true }
     ).select('-password');
