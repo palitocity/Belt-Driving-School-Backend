@@ -234,7 +234,7 @@ router.get('/admin/profile/:id', adminOnly, async (req, res) => {
     if (!admin) {
       return res.status(404).json({ error: "Admin not found" });
     }
-    res.json({ admin });
+    res.status(200).json({ admin });
   } catch (err) {
     console.error("Error retrieving admin profile:", err);
     res.status(500).json({ error: `Error retrieving admin profile: ${err.message}` });
