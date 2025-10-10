@@ -17,12 +17,14 @@ const contactLimiter = rateLimit({
 router.post("/", contactLimiter, async (req, res) => {
   try {
     const { fullName, email, message } = req.body;
+    
     const newContact = new contact({ fullName, email, message });
     await newContact.save();
+
     res.status(201).json({ message: "Contact request submitted successfully." });
   } catch (error) {
     console.error("Error creating contact request:", error);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({ message: `Error creating contact request: ${error.message}` });
   }
 });
 
@@ -35,7 +37,7 @@ router.get("/", adminOnly, async (req, res) => {
     res.status(200).json(contacts);
   } catch (error) {
     console.error("Error retrieving contact requests:", error);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({ message: `Error retrieving contact requests: ${error.message}` });
   }
 });
 
