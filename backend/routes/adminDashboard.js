@@ -6,6 +6,8 @@ const adminOnly = require('../middleware/admin');
 const Plan = require('../models/plan');
 const Team = require('../models/team');
 const { route } = require('./auth');
+const Consult = require('../models/consult');
+const Contact = require('../models/contactus');
 const { imageURLToPath } = require('url');
 const fs = require('fs');
 const path = require('path');
@@ -99,8 +101,10 @@ router.get('/stats', adminOnly, async (req, res) => {
   const totalInstructors = await User.countDocuments({ role: 'instructor' });
   const totalOrders = await Order.countDocuments();
   const paidOrders = await Order.countDocuments({ status: 'paid' });
+  const totalContacts = await Contact.countDocuments();
+  const totalConsults = await Consult.countDocuments();
 
-  res.json({ totalUsers, totalAdmins, totalStudents, totalInstructors, totalOrders, paidOrders });
+  res.json({ totalUsers, totalAdmins, totalStudents, totalInstructors, totalOrders, paidOrders, totalContacts,totalConsults });
 });
 router.post("/add", adminOnly, async (req, res) => {
   try {
