@@ -13,6 +13,11 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const app = express();
 const PORT = process.env.PORT || 4000;
+const path = require("path");
+
+// Security Middlewares
+app.use(mongoSanitize());
+app.use(xss());
 
 // ======================
 // Import Routes
