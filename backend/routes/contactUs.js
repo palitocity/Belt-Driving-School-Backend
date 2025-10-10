@@ -48,4 +48,19 @@ router.get("/:id", adminOnly, async (req, res) => {
   }
 });
 
+router.put("/update/:messageId/", adminOnly , async (req, res)=> 
+{
+  try{
+    const msgId = req.body.params.messageId;
+    if (!msgId || !id) {
+      res.status.json({message: `Invalid Access to message`})
+    }
+
+  } catch(error){
+    console.error(`Error updating message ${error.message}`);
+    res.status(500).json({message: `Error updating message ${error.message}`})
+  }
+
+});
+
 module.exports = router;

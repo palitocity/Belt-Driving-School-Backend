@@ -26,6 +26,7 @@ const accidentRoutes = require("./backend/routes/accident");
 const userTransactionRoutes = require("./backend/routes/userTransaction");
 const contactUsRoutes = require("./backend/routes/contactUs");
 const consultationRoutes = require("./backend/routes/consultRoutes");  
+const NewsletterRoutes = require("./backend/routes/Newsletter");
 
 
 
@@ -68,8 +69,10 @@ app.use("/api/forgot-password", limiter);
 app.use("/api/consult", consultationRoutes);
 
 // contact us route
-
 app.use("/api/contact-us", contactUsRoutes);
+
+// newsletter route
+app.use("/api/newsletter", NewsletterRoutes);
 
 // Public Routes
 app.use("/api/auth", authRoutes);
