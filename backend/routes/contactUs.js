@@ -17,7 +17,11 @@ const contactLimiter = rateLimit({
 router.post("/", contactLimiter, async (req, res) => {
   try {
     const { fullName, email, message } = req.body;
-    
+    // Validation
+    if (!fullName || !email || !message) {
+      return res.status(400).json({ message: "fullName, email, and message are required" });
+    }
+    // Create new contact
     const newContact = new contact({ fullName, email, message });
     await newContact.save();
 
@@ -31,8 +35,11 @@ router.post("/", contactLimiter, async (req, res) => {
 // ===========================
 // 📋 GET: Retrieve all contact requests
 // ===========================          
-router.get("/", adminOnly, async (req, res) => {
+router.get("/:id", adminOnly, async (req, res) => {
   try {
+    if (!req.params.id) {
+      return res.status(401).json({ message: "Unauthorized access i hope you find what you are looking for" });
+    }
     const contacts = await contact.find().sort({ createdAt: -1 });
     res.status(200).json(contacts);
   } catch (error) {
