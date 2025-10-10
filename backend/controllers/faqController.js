@@ -8,7 +8,6 @@ exports.addFAQ = async (req, res) => {
     if (!question || !answer) {
       return res.status(400).json({ message: "Question and answer are required" });
     }
-
     const newFAQ = await FAQ.create({ question, answer });
     res.status(201).json({ message: "FAQ added successfully", data: newFAQ });
   } catch (error) {

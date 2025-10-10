@@ -64,6 +64,7 @@ router.post("/teams/upload", adminOnly, (req, res) => {
 });
 
 // Serve the teams folder publicly
+app.use('/static', express.static(path.join(__dirname, 'uploads')));
 router.use("/teams/uploads", express.static(path.join(__dirname, "teams")));
 // Get all users
 router.get('/users', adminOnly, async (req, res) => {

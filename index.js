@@ -28,8 +28,6 @@ const contactUsRoutes = require("./backend/routes/contactUs");
 const consultationRoutes = require("./backend/routes/consultRoutes");  
 const NewsletterRoutes = require("./backend/routes/Newsletter");
 
-
-
 const adminAuthRoutes = require("./backend/routes/adminAuth");
 const adminDashboardRoutes = require("./backend/routes/adminDashboard");
 const adminAccidentRoutes = require("./backend/routes/adminAccidents");
@@ -39,11 +37,6 @@ const instructorRoutes = require('./backend/routes/instructorRoutes');
 const userActivityRoutes = require('./backend/routes/userActivityRoutes');
 const instructorDashboardRoutes = require('./backend/routes/instructorDashboard');
 const  orderRoutes = require('./backend/routes/orderRoute');
-
-
-
-
-
 
 // ======================
 //  Middleware Setup
