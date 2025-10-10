@@ -9,7 +9,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -23,6 +24,10 @@ const userRoutes = require("./backend/routes/user");
 const planRoutes = require("./backend/routes/plan");
 const accidentRoutes = require("./backend/routes/accident");
 const userTransactionRoutes = require("./backend/routes/userTransaction");
+const contactUsRoutes = require("./backend/routes/contactUs");
+const consultationRoutes = require("./backend/routes/consultRoutes");  
+
+
 
 const adminAuthRoutes = require("./backend/routes/adminAuth");
 const adminDashboardRoutes = require("./backend/routes/adminDashboard");
@@ -58,6 +63,13 @@ app.use("/api/forgot-password", limiter);
 // ======================
 //  Routes Registration
 // ======================
+
+//consult route 
+app.use("/api/consult", consultationRoutes);
+
+// contact us route
+
+app.use("/api/contact-us", contactUsRoutes);
 
 // Public Routes
 app.use("/api/auth", authRoutes);
