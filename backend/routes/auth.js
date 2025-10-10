@@ -65,8 +65,7 @@ router.post('/register', async (req, res) => {
         </div>
       `,
     };
-
-    // await transporter.sendMail(mailOptions);
+     await transporter.sendMail(mailOptions);
     const token = jwt.sign({ id: user._id, email: user.email ,role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
     res.status(201).json({ message: 'User registered', user: { id: user._id, fullName: user.fullName, email: user.email }, token });
