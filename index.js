@@ -38,13 +38,15 @@ const userActivityRoutes = require('./backend/routes/userActivityRoutes');
 const instructorDashboardRoutes = require('./backend/routes/instructorDashboard');
 const  orderRoutes = require('./backend/routes/orderRoute');
 
+
+
 // ======================
 //  Middleware Setup
 // ======================
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(helmet());
-
+app.use('/static', express.static(path.join(__dirname, 'uploads')));
 // Rate Limiter for Authentication and Password Routes
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
