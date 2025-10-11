@@ -4,22 +4,12 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const nodemailer = require("nodemailer");
 
-
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: process.env.SMTP_PORT || 465,
-  secure: true, // use true for port 465
+  service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER || 'testeranothertext@gmail.com',
-    pass: process.env.EMAIL_PASS || 'rerc rbgr wjrw tpmw',
+    user: "testeranothertext@gmail.com",
+    pass: "rerc rbgr wjrw tpmw",
   },
-});
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('❌ Mail transporter error:', error);
-  } else {
-    console.log('✅ Mail transporter is ready');
-  }
 });
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -59,7 +49,7 @@ router.post('/register', async (req, res) => {
     user.save();
     // Send activation email
     const mailOptions = {
-      from: process.env.EMAIL_USER || 'test@palitocity.online',
+      from: 'testeranothertext@gmail.com',
       to: email,
       subject: "Activate Your Account - Belt Driving School 🚗",
       html: `
@@ -74,11 +64,13 @@ router.post('/register', async (req, res) => {
       `,
     };
     try {
-      await transporter.sendMail(mailOptions);
-      console.log('✅ Email sent successfully');
-    } catch (emailErr) {
-      console.error('❌ Failed to send email:', emailErr);
-    }
+    await transporter.verify();
+    console.log("✅ Transporter verified");
+    const info = await transporter.sendMail(mailOptions);
+    console.log("✅ Message sent:", info.response);
+  } catch (err) {
+    console.error("❌ SendMail error:", err);
+  }
 
     const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
