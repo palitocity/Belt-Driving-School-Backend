@@ -41,6 +41,7 @@ const instructorRoutes = require('./backend/routes/instructorRoutes');
 const userActivityRoutes = require('./backend/routes/userActivityRoutes');
 const instructorDashboardRoutes = require('./backend/routes/instructorDashboard');
 const  orderRoutes = require('./backend/routes/orderRoute');
+const emailRoute = require('./backend/routes/emailRoute');
 
 
 
@@ -63,6 +64,10 @@ app.use("/api/forgot-password", limiter);
 // ======================
 //  Routes Registration
 // ======================
+
+// email route
+app.use("/api/email", emailRoute);
+
 
 //consult route 
 app.use("/api/consult", consultationRoutes);
