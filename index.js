@@ -64,7 +64,6 @@ app.use("/api/forgot-password", limiter);
 // ======================
 //  Routes Registration
 // ======================
-
 // email route
 app.use("/api/email", emailRoute);
 
