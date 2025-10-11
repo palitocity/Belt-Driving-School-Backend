@@ -36,4 +36,4 @@ router.post("/send-mail", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
