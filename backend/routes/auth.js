@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "testeranothertext@gmail.com",
+    user: "palitocity",
     pass: "rerc rbgr wjrw tpmw",
   },
 });
@@ -64,12 +64,18 @@ router.post('/register', async (req, res) => {
       `,
     };
     try {
-    await transporter.verify();
-    console.log("✅ Transporter verified");
-    const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Message sent:", info.response);
-  } catch (err) {
-    console.error("❌ SendMail error:", err);
+      let sendEmail = await transporter.verify();
+      if (sendEmail) {
+        console.log("✅ Transporter verified");
+        const info = await transporter.sendMail(mailOptions);
+        if (info) {
+          console.log("✅ Message sent:", info.response);
+        } else {
+          console.error("❌ Message failed:", info);
+        }
+      }
+    } catch (err) {
+          console.error("❌ SendMail error:", err);
   }
 
     const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
