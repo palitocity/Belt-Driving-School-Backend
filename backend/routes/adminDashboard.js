@@ -17,14 +17,14 @@ const path = require('path');
 const router = express.Router();
 
 router.use(express.json({ limit: "10mb" }));
-router.use("/teams/uploads", express.static(path.join(homeDir, "uploads")));
+
 const homeDir = path.resolve(__dirname, "../../teams");
 const uploadsDir = path.join(homeDir, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-
+router.use("/teams/uploads", express.static(path.join(homeDir, "uploads")));
 // Upload route
 console.log(`Uploading image to ${uploadsDir}`)
 router.post("/teams/upload", adminOnly, (req, res) => {
