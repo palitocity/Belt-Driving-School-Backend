@@ -15,12 +15,15 @@ const path = require('path');
 
 
 const router = express.Router();
+router.use("/teams/upload", express.static(path.join(__dirname, "teams")));
 router.use(express.json({ limit: "10mb" }));
+
 const uploadsDir = path.join(__dirname, 'teams');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 // Upload route
+console.log(`Uploading image to ${uploadsDir}`)
 router.post("/teams/upload", adminOnly, (req, res) => {
    try {
       const { image } = req.body; // expecting { "image": "data:..." }
@@ -28,7 +31,6 @@ router.post("/teams/upload", adminOnly, (req, res) => {
     if (!image) {
       return res.status(400).json({ message: "No image provided" });
     }
-
     // Extract image type (e.g., image/png or application/pdf)
     const match = image.match(/^data:(.+);base64,(.*)$/);
     if (!match) {
@@ -42,10 +44,11 @@ router.post("/teams/upload", adminOnly, (req, res) => {
     // Determine image extension
     const extension = mimeType.split("/")[1];
     const imageName = `${Date.now()}.${extension}`;
-    const imagePath = path.join(uploadsDir, imageName);
+    const imagePath = path.join(`${uploadsDir}/uploads`, imageName);
 
     // Save the image
     fs.writeFileSync(imagePath, buffer);
+    console.log(`final image part is ${imagePath}`)
 
     // Return public image path
     const publicPath = `/uploads/${imageName}`;
@@ -65,7 +68,8 @@ router.post("/teams/upload", adminOnly, (req, res) => {
 
 // Serve the teams folder publicly
 
-router.use("/teams/uploads", express.static(path.join(__dirname, "teams")));
+
+
 // Get all users
 router.get('/users', adminOnly, async (req, res) => {
   const users = await User.find({ role: 'user' }).select('-password');
