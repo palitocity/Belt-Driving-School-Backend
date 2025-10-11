@@ -1,6 +1,5 @@
 const  express = require("express");
 const  transporter = require("../mailer/mail");
-
 const router = express.Router();
 
 // POST /api/send-mail
