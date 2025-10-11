@@ -18,7 +18,7 @@ const router = express.Router();
 router.use("/teams/upload", express.static(path.join(__dirname, "teams")));
 router.use(express.json({ limit: "10mb" }));
 const homeDir = path.resolve(__dirname, "../");
-const uploadsDir = path.join(homeDir, 'teams');
+const uploadsDir = path.join(homeDir, 'teams/uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -51,7 +51,7 @@ router.post("/teams/upload", adminOnly, (req, res) => {
     console.log(`final image part is ${imagePath}`)
 
     // Return public image path
-    const publicPath = `/uploads/${imageName}`;
+    const publicPath = `/teams/uploads/${imageName}`;
     const fullUrl = `http://localhost:5000${publicPath}`;
 
     return res.json({
