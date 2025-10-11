@@ -1,5 +1,5 @@
 const  express = require("express");
-const  transporter = require("../mailer/transporter");
+const  transporter = require("../mailer/mail");
 
 const router = express.Router();
 
