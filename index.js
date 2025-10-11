@@ -67,7 +67,8 @@ app.use("/api/forgot-password", limiter);
 // email route
 app.use("/api/email", emailRoute);
 
-app.use("/teams/uploads", express.static(path.join(__dirname, "teams")));
+const homeDir = path.resolve(__dirname, "./teams");
+app.use("/teams/uploads", express.static(path.join(homeDir, "uploads")));
 //consult route 
 app.use("/api/consult", consultationRoutes);
 
