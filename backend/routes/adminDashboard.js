@@ -44,7 +44,7 @@ router.post("/teams/upload", adminOnly, (req, res) => {
     // Determine image extension
     const extension = mimeType.split("/")[1];
     const imageName = `${Date.now()}.${extension}`;
-    const imagePath = path.join(`${uploadsDir}/uploads`, imageName);
+    const imagePath = path.join(`${uploadsDir}`, imageName);
 
     // Save the image
     fs.writeFileSync(imagePath, buffer);
