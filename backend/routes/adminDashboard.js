@@ -17,8 +17,9 @@ const path = require('path');
 const router = express.Router();
 
 router.use(express.json({ limit: "10mb" }));
-const homeDir = path.resolve(__dirname, "../");
-const uploadsDir = path.join(homeDir, 'teams/uploads');
+router.use("/teams/uploads", express.static(path.join(homeDir, "uploads")));
+const homeDir = path.resolve(__dirname, "../../teams");
+const uploadsDir = path.join(homeDir, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
