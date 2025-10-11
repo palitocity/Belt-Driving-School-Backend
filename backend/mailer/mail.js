@@ -4,10 +4,12 @@ const express = require("express");
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    service: "gmail", // using Gmail service auto-sets host and port
+    service: "smtp.gmail.com", // using Gmail service auto-sets host and port
+    port:465,
+    secure: true,
     auth: {
-        user: process.env.EMAIL_USER || 'palitocity',
-        pass: process.env.EMAIL_PASS || 'rerc rbgr wjrw tpmw',
+        user: 'testeranothertext@gmail.com',
+        pass:  'rerc rbgr wjrw tpmw',
     },
 });
 
