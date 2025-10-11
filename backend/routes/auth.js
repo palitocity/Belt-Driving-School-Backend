@@ -6,12 +6,12 @@ const nodemailer = require("nodemailer");
 
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'server231.web-hosting.com',
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: process.env.SMTP_PORT || 465,
   secure: true, // use true for port 465
   auth: {
-    user: process.env.EMAIL_USER || 'test@palitocity.online',
-    pass: process.env.EMAIL_PASS || 'Testing@12345Az',
+    user: process.env.EMAIL_USER || 'testeranothertext@gmail.com',
+    pass: process.env.EMAIL_PASS || '@gmail.comtesteranothertext',
   },
 });
 transporter.verify((error, success) => {
