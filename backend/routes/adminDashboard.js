@@ -23,7 +23,7 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-router.use("/teams/uploads", express.static(path.join(__dirname, "teams/uploads")));
+
 // Upload route
 console.log(`Uploading image to ${uploadsDir}`)
 router.post("/teams/upload", adminOnly, (req, res) => {
